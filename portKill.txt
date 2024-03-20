@@ -1,3 +1,0 @@
-lsof -i :<port_number>
-kill -9 <PID>
-kill -9 $(lsof -t -i:3000)

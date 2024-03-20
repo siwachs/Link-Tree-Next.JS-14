@@ -1,0 +1,6 @@
+lsof -i :<port_number>
+kill -9 <PID>
+kill -9 $(lsof -t -i:3000)
+
+
+nslookup cluster0.i4vy3er.mongodb.net

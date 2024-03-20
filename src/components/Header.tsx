@@ -1,7 +1,11 @@
 import Link from "next/link";
-import React from "react";
+import { authOption } from "@/app/api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
 
-const Header: React.FC = () => {
+const Header: React.FC = async () => {
+  const session = await getServerSession(authOption);
+  console.log(session);
+
   return (
     <header className="bg-white border-b py-4">
       <div className="max-w-7xl mx-auto flex justify-between px-6">
