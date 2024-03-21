@@ -1,3 +1,5 @@
+import CreateAccountForm from "@/components/forms/CreateAccountForm";
+
 export default function Home() {
   return (
     <section className="pt-32">
@@ -11,17 +13,7 @@ export default function Home() {
         </h2>
       </div>
 
-      <form className="inline-flex items-center shadow-lg">
-        <span className="bg-white py-4 pl-4">linktree.to/</span>
-        <input
-          placeholder="username"
-          className="py-4 px-2 outline-none"
-          type="text"
-        />
-        <button className="bg-blue-500 text-white py-4 px-6" type="submit">
-          Join for Free
-        </button>
-      </form>
+      <CreateAccountForm />
     </section>
   );
 }
