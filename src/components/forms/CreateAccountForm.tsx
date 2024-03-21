@@ -1,14 +1,17 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import { useRef } from "react";
 
 const CreateAccountForm: React.FC = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
 
-  const createAccount = (e: React.FormEvent<HTMLFormElement>) => {
+  const createAccount = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const username = usernameRef.current?.value.trim();
     if (!username) return;
+
+    signIn("google", { callbackUrl: `/account?username=${username}` });
   };
 
   return (

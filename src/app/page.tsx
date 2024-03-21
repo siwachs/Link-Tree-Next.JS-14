@@ -1,6 +1,11 @@
+import { getServerSession } from "next-auth";
+import { authOption } from "./api/auth/[...nextauth]/route";
 import CreateAccountForm from "@/components/forms/CreateAccountForm";
 
-export default function Home() {
+export default async function Home() {
+  // @ts-ignore
+  const session = await getServerSession(authOption);
+
   return (
     <section className="pt-32">
       <div className="max-w-md mb-6">
@@ -13,7 +18,7 @@ export default function Home() {
         </h2>
       </div>
 
-      <CreateAccountForm />
+      {!session && <CreateAccountForm />}
     </section>
   );
 }
