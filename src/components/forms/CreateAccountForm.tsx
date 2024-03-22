@@ -11,7 +11,7 @@ const CreateAccountForm: React.FC = () => {
     const username = usernameRef.current?.value.trim();
     if (!username) return;
 
-    signIn("google", { callbackUrl: `/account?username=${username}` });
+    signIn("google", { callbackUrl: `/account?desiredUsername=${username}` });
   };
 
   return (

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Logout from "./buttons/Logout";
+import SignOut from "./buttons/SignOut";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
 import { authOption } from "@/app/api/auth/[...nextauth]/route";
@@ -29,7 +29,7 @@ const Header: React.FC = async () => {
           {session ? (
             <>
               <Link href="/account">Hello, {session.user?.name}</Link>
-              <Logout />
+              <SignOut />
             </>
           ) : (
             <>
