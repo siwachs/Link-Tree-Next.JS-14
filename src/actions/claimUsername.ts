@@ -1,7 +1,6 @@
 "use server";
 
 import Page from "@/models/Page.model.";
-import { redirect } from "next/navigation";
 import { connect } from "mongoose";
 
 export default async function claimUsername(
@@ -14,10 +13,19 @@ export default async function claimUsername(
 
     await connect(process.env.MONGODB_URI!);
     await Page.create({ uri: username });
-    redirect(`/account/${username}`);
+
+    return {
+      redirect: true,
+      redirectTo: `/account/${username}`,
+      error: false,
+    };
   } catch (error: any) {
     if (error.code === 11000) {
-      redirect("/account?usernameTaken=1");
+      return {
+        redirect: true,
+        redirectTo: "/account?usernameTaken=1",
+        error: true,
+      };
     }
   }
 }

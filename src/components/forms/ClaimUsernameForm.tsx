@@ -3,17 +3,20 @@
 import claimUsername from "@/actions/claimUsername";
 import { useFormState } from "react-dom";
 import RightIcons from "../icons/RightIcons";
+import { redirect } from "next/navigation";
 
 const ClaimUsernameForm: React.FC<{ desiredUsername: string }> = ({
   desiredUsername,
 }) => {
   const initialState = {
-    username: desiredUsername,
-    error: null,
+    redirect: false,
+    redirectTo: `/account?desiredUsername=${desiredUsername}`,
+    error: false,
   };
 
   // @ts-ignore
   const [state, formAction] = useFormState(claimUsername, initialState);
+  if (state?.redirect) redirect(state?.redirectTo);
 
   return (
     <form action={formAction}>
@@ -26,14 +29,18 @@ const ClaimUsernameForm: React.FC<{ desiredUsername: string }> = ({
           required
           name="username"
           defaultValue={desiredUsername}
-          className="block p-2 outline-none mx-auto border w-full mb-2 text-center"
+          className={`block p-2 outline-none mx-auto border w-full mb-2 text-center ${
+            state?.error && "border-red-500"
+          }`}
           type="text"
           placeholder="Username"
         />
 
-        {/* <p aria-live="polite" className="text-sm text-red-600 mb-2 -mt-2">
-          Username already taken.
-        </p> */}
+        {state?.error && (
+          <p aria-live="polite" className="text-sm text-red-600 -mt-2">
+            Username already taken.
+          </p>
+        )}
 
         <button
           className="bg-blue-500 text-white py-2 px-4 mx-auto w-full flex gap-2 items-center justify-center"
