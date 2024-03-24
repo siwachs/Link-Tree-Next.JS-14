@@ -5,7 +5,17 @@ import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { signOut } from "next-auth/react";
 
-const SignOut: React.FC = () => {
+const SignOut: React.FC<{
+  loadedBtnClassName?: string;
+  loadingBtnClassName?: string;
+  textClassName?: string;
+  btnSize?: string;
+}> = ({
+  loadedBtnClassName = "flex gap-2 items-center border py-2 px-4 shadow",
+  loadingBtnClassName = "flex gap-2 items-center border py-2 px-4 shadow animate-pulse bg-gray-200",
+  textClassName,
+  btnSize,
+}) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
@@ -13,20 +23,19 @@ const SignOut: React.FC = () => {
   return mounted ? (
     <button
       type="button"
-      className="flex gap-2 items-center border py-2 px-4 shadow"
-      onClick={() => signOut()}
+      className={loadedBtnClassName}
+      onClick={() => signOut({ callbackUrl: "/" })}
     >
-      <span>Sign Out</span>
-      <FontAwesomeIcon icon={faRightFromBracket} />
+      <span className={textClassName}>Sign Out</span>
+      <FontAwesomeIcon
+        fixedWidth
+        icon={faRightFromBracket}
+        className={btnSize}
+      />
     </button>
   ) : (
-    <button
-      type="button"
-      className="flex gap-2 items-center border py-2 px-4 shadow animate-pulse bg-gray-200"
-      onClick={() => signOut()}
-    >
-      <span>Sign Out</span>
-      <span>...</span>
+    <button type="button" className={loadingBtnClassName} onClick={() => {}}>
+      <span className={textClassName}>Sign Out ...</span>
     </button>
   );
 };
