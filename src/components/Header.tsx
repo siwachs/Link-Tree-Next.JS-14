@@ -28,7 +28,9 @@ const Header: React.FC = async () => {
         <nav className="flex items-center gap-4 text-sm text-slate-500">
           {session ? (
             <>
-              <Link href="/account">Hello, {session.user?.name}</Link>
+              <Link className="select-none" href="/account">
+                Hello, {session.user?.name}
+              </Link>
               <SignOut />
             </>
           ) : (
