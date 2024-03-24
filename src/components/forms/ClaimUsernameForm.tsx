@@ -2,21 +2,21 @@
 
 import claimUsername from "@/actions/claimUsername";
 import { useFormState } from "react-dom";
-import RightIcons from "../icons/RightIcons";
 import { redirect } from "next/navigation";
+import ClaimUsername from "../buttons/ClaimUsername";
+
+const initialState = {
+  redirect: false,
+  redirectTo: `/account`,
+  error: false,
+};
 
 const ClaimUsernameForm: React.FC<{ desiredUsername: string }> = ({
   desiredUsername,
 }) => {
-  const initialState = {
-    redirect: false,
-    redirectTo: `/account?desiredUsername=${desiredUsername}`,
-    error: false,
-  };
-
   // @ts-ignore
   const [state, formAction] = useFormState(claimUsername, initialState);
-  if (state?.redirect) redirect(state?.redirectTo);
+  if (state?.redirect) redirect(state?.redirectTo!);
 
   return (
     <form action={formAction}>
@@ -42,13 +42,7 @@ const ClaimUsernameForm: React.FC<{ desiredUsername: string }> = ({
           </p>
         )}
 
-        <button
-          className="bg-blue-500 text-white py-2 px-4 mx-auto w-full flex gap-2 items-center justify-center"
-          type="submit"
-        >
-          <span>Claim this username</span>
-          <RightIcons />
-        </button>
+        <ClaimUsername />
       </div>
     </form>
   );

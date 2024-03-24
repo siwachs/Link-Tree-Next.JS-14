@@ -1,7 +1,9 @@
 "use server";
 
+import { authOption } from "@/app/api/auth/[...nextauth]/route";
 import Page from "@/models/Page.model.";
 import { connect } from "mongoose";
+import { getServerSession } from "next-auth";
 
 export default async function claimUsername(
   prevState: any,
@@ -12,18 +14,21 @@ export default async function claimUsername(
     if (!username) return;
 
     await connect(process.env.MONGODB_URI!);
-    await Page.create({ uri: username });
+
+    // @ts-ignore
+    const session = await getServerSession(authOption);
+    await Page.create({ uri: username, owner: session?.user?.email });
 
     return {
       redirect: true,
-      redirectTo: `/account/${username}`,
+      redirectTo: `/account?created=${username}`,
       error: false,
     };
   } catch (error: any) {
     if (error.code === 11000) {
       return {
-        redirect: true,
-        redirectTo: "/account?usernameTaken=1",
+        redirect: false,
+        redirectTo: null,
         error: true,
       };
     }

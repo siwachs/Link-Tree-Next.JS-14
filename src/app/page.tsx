@@ -18,7 +18,7 @@ export default async function Home() {
         </h2>
       </div>
 
-      {!session && <CreateAccountForm />}
+      <CreateAccountForm user={session?.user} />
     </section>
   );
 }

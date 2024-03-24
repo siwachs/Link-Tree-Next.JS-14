@@ -1,15 +1,21 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
-const CreateAccountForm: React.FC = () => {
+const CreateAccountForm: React.FC<{ user: any }> = ({ user }) => {
+  const router = useRouter();
   const usernameRef = useRef<HTMLInputElement>(null);
 
   const createAccount = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const username = usernameRef.current?.value.trim();
     if (!username) return;
+
+    if (user) {
+      router.push(`/account?desiredUsername=${username}`);
+    }
 
     signIn("google", { callbackUrl: `/account?desiredUsername=${username}` });
   };
