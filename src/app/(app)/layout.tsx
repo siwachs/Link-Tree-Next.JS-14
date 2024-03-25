@@ -1,14 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { Inter } from "next/font/google";
 import "../globals.css";
 import { getServerSession } from "next-auth";
 import { authOption } from "../api/auth/[...nextauth]/route";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChartLine, faFileLines } from "@fortawesome/free-solid-svg-icons";
-import SignOut from "@/components/buttons/SignOut";
-import { redirect } from "next/navigation";
+import SidebarNav from "@/components/navigations/SidebarNav";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,8 +25,8 @@ export default async function AppLayout({
     <html lang="en">
       <body className={inter.className}>
         <main className="flex">
-          <aside className="bg-white max-h-screen h-screen overflow-scroll w-48 p-4 shadow">
-            <div className="rounded-full overflow-hidden w-28 h-28 mx-auto mb-12">
+          <aside className="h-screen max-h-screen w-48 overflow-scroll bg-white p-4 shadow">
+            <div className="mx-auto mb-12 h-28 w-28 overflow-hidden rounded-full">
               <Image
                 src={session?.user?.image!}
                 alt="profile-picture"
@@ -40,39 +36,11 @@ export default async function AppLayout({
               />
             </div>
 
-            <nav className="flex flex-col items-center gap-6 text-gray-500">
-              <Link href="/account" className="flex items-center gap-4">
-                <FontAwesomeIcon
-                  fixedWidth
-                  icon={faFileLines}
-                  className="w-6 h-6"
-                />
-                <span className="text-gray-700">My Page</span>
-              </Link>
-
-              <Link
-                href="/analytics"
-                className="flex items-center gap-4 text-gray-500"
-              >
-                <FontAwesomeIcon
-                  fixedWidth
-                  icon={faChartLine}
-                  className="w-6 h-6"
-                />
-                <span className="text-gray-700">Analytics</span>
-              </Link>
-
-              <SignOut
-                loadedBtnClassName="flex items-center flex-row-reverse gap-4 text-gray-500"
-                textClassName="text-gray-700"
-                loadingBtnClassName="animate-pulse"
-                btnSize="w-6 h-6"
-              />
-            </nav>
+            <SidebarNav />
           </aside>
 
           <div className="flex-grow">
-            <div className="bg-white m-4 p-4 shadow">{children}</div>
+            <div className="m-8 bg-white p-4 shadow">{children}</div>
           </div>
         </main>
       </body>

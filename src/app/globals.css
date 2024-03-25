@@ -5,3 +5,21 @@
 body {
   @apply bg-gray-100;
 }
+
+@layer utilities {
+  .sidebarLink {
+    @apply flex w-full items-center justify-center gap-2 text-gray-500;
+  }
+
+  .sidebarLink span {
+    @apply text-gray-700;
+  }
+
+  .sidebarLink.active {
+    @apply font-semibold text-blue-500;
+  }
+
+  .sidebarLink.active span {
+    @apply text-blue-500;
+  }
+}

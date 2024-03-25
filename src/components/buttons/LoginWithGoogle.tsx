@@ -8,10 +8,10 @@ const LoginWithGoogle: React.FC = () => {
   return (
     <button
       type="button"
-      onClick={() => signIn("google")}
-      className="bg-white shadow w-full py-4 flex items-center justify-center gap-3"
+      onClick={() => signIn("google", { callbackUrl: "/account" })}
+      className="flex w-full items-center justify-center gap-3 bg-white py-4 shadow"
     >
-      <FontAwesomeIcon className="w-7 h-7" icon={faGoogle} />
+      <FontAwesomeIcon className="h-7 w-7" icon={faGoogle} />
       Sign In With Google
     </button>
   );

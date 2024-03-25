@@ -10,12 +10,12 @@ const Header: React.FC = async () => {
   const session = await getServerSession(authOption);
 
   return (
-    <header className="bg-white border-b py-4">
-      <div className="max-w-7xl mx-auto flex justify-between px-6">
+    <header className="border-b bg-white py-4">
+      <div className="mx-auto flex max-w-7xl justify-between px-6">
         <div className="flex items-center gap-8">
-          <Link href="/" className="text-blue-700 flex items-center gap-2">
-            <FontAwesomeIcon className="text-blue-500" icon={faLink} />
-            <span className="font-bold text-xl">LinkTree</span>
+          <Link href="/" className="flex items-center gap-2 text-blue-700">
+            <FontAwesomeIcon className="h-5 w-5 text-blue-500" icon={faLink} />
+            <span className="text-xl font-bold">LinkTree</span>
           </Link>
 
           <nav className="flex gap-4 text-sm text-slate-500">
@@ -31,7 +31,7 @@ const Header: React.FC = async () => {
               <Link className="select-none" href="/account">
                 Hello, {session.user?.name}
               </Link>
-              <SignOut />
+              <SignOut btnSize="h-4 w-4" />
             </>
           ) : (
             <>
