@@ -29,7 +29,7 @@ export default async function AppLayout({
     <html lang="en">
       <body className={inter.className}>
         <main className="flex">
-          <aside className="bg-blue-100 max-h-screen h-screen overflow-scroll w-48 p-4">
+          <aside className="bg-white max-h-screen h-screen overflow-scroll w-48 p-4 shadow">
             <div className="rounded-full overflow-hidden w-28 h-28 mx-auto mb-12">
               <Image
                 src={session?.user?.image!}
@@ -71,7 +71,9 @@ export default async function AppLayout({
             </nav>
           </aside>
 
-          <div className="max-w-7xl mx-auto p-6">{children}</div>
+          <div className="flex-grow">
+            <div className="bg-white m-4 p-4 shadow">{children}</div>
+          </div>
         </main>
       </body>
     </html>
