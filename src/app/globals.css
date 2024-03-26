@@ -7,6 +7,7 @@ body {
 }
 
 @layer utilities {
+  /* Sidebar Link Styles */
   .sidebarLink {
     @apply flex w-full items-center justify-center gap-2 text-gray-500;
   }
@@ -21,5 +22,22 @@ body {
 
   .sidebarLink.active span {
     @apply text-blue-500;
+  }
+
+  /* Toggler */
+  .toggler {
+    @apply inline-flex bg-gray-200 p-1;
+  }
+
+  .toggler div {
+    @apply flex items-center gap-2 px-4 py-2 text-gray-500;
+  }
+
+  .toggler input[type="radio"] {
+    @apply sr-only;
+  }
+
+  .toggler input[type="radio"]:checked + div {
+    @apply bg-white text-blue-600;
   }
 }

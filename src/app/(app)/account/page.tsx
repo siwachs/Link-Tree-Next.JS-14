@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import ClaimUsernameForm from "@/components/forms/ClaimUsernameForm";
 import Page from "@/models/Page.model.";
 import { connect } from "mongoose";
+import PageSettingsForm from "@/components/forms/PageSettingsForm";
 
 export default async function AccountPage(req: any) {
   // @ts-ignore
@@ -15,10 +16,10 @@ export default async function AccountPage(req: any) {
   const page = await Page.findOne({ owner: session?.user?.email });
 
   return page ? (
-    <div>Page Found.</div>
-  ) : (
-    <div>
-      <ClaimUsernameForm desiredUsername={desiredUsername} />
+    <div className="-m-4">
+      <PageSettingsForm page={page} />
     </div>
+  ) : (
+    <ClaimUsernameForm desiredUsername={desiredUsername} />
   );
 }

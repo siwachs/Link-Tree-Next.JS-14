@@ -24,7 +24,7 @@ export default async function AppLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="flex">
+        <div className="flex">
           <aside className="h-screen max-h-screen w-48 overflow-scroll bg-white p-4 shadow">
             <div className="mx-auto mb-12 h-28 w-28 overflow-hidden rounded-full">
               <Image
@@ -39,10 +39,10 @@ export default async function AppLayout({
             <SidebarNav />
           </aside>
 
-          <div className="flex-grow">
+          <main className="flex-grow">
             <div className="m-8 bg-white p-4 shadow">{children}</div>
-          </div>
-        </main>
+          </main>
+        </div>
       </body>
     </html>
   );
