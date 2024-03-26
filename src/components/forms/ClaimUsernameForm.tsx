@@ -3,7 +3,8 @@
 import claimUsername from "@/actions/claimUsername";
 import { useFormState } from "react-dom";
 import { redirect } from "next/navigation";
-import ClaimUsername from "../buttons/ClaimUsername";
+import SubmitForm from "../buttons/SubmitForm";
+import RightIcons from "../icons/RightIcons";
 
 const initialState = {
   redirect: false,
@@ -20,16 +21,17 @@ const ClaimUsernameForm: React.FC<{ desiredUsername: string }> = ({
 
   return (
     <form action={formAction}>
-      <h1 className="text-4xl font-bold text-center select-none mb-6">
+      <h1 className="mb-6 select-none text-center text-4xl font-bold">
         Grab your username
       </h1>
 
-      <div className="max-w-sm mx-auto">
+      <div className="mx-auto max-w-sm">
         <input
           required
+          aria-required="true"
           name="username"
           defaultValue={desiredUsername}
-          className={`block p-2 outline-none mx-auto border w-full mb-2 text-center ${
+          className={`mx-auto mb-2 block w-full border p-2 text-center outline-none ${
             state?.error && "border-red-500"
           }`}
           type="text"
@@ -37,12 +39,15 @@ const ClaimUsernameForm: React.FC<{ desiredUsername: string }> = ({
         />
 
         {state?.error && (
-          <p aria-live="polite" className="text-sm text-red-600 -mt-2">
+          <p aria-live="polite" className="-mt-2 text-sm text-red-600">
             Username already taken.
           </p>
         )}
 
-        <ClaimUsername />
+        <SubmitForm>
+          <span>Claim this username</span>
+          <RightIcons />
+        </SubmitForm>
       </div>
     </form>
   );

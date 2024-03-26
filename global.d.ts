@@ -15,3 +15,15 @@ interface ToggleOption {
   fixedWidth?: boolean;
   label: string;
 }
+
+interface PageObject {
+  _id: string;
+  uri: string;
+  owner: string;
+  displayName: string;
+  location: string;
+  bio: string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  __v: number;
+}

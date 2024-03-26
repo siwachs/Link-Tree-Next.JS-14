@@ -7,7 +7,7 @@ import { getServerSession } from "next-auth";
 
 export default async function claimUsername(
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ) {
   try {
     const username = formData.get("username")?.toString()?.trim();
@@ -17,7 +17,11 @@ export default async function claimUsername(
 
     // @ts-ignore
     const session = await getServerSession(authOption);
-    await Page.create({ uri: username, owner: session?.user?.email });
+    await Page.create({
+      uri: username,
+      owner: session?.user?.email,
+      displayName: session?.user?.name,
+    });
 
     return {
       redirect: true,
