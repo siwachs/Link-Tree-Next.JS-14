@@ -3,9 +3,8 @@ import { ToggleOption } from "@/../global";
 
 const BGTypeToggler: React.FC<{
   togglerOptions: ToggleOption[];
-  selected: string;
   onChange?: () => void;
-}> = ({ togglerOptions, selected, onChange }) => {
+}> = ({ togglerOptions, onChange }) => {
   return (
     <div className="toggler shadow">
       {togglerOptions.map((option) => {
@@ -14,12 +13,7 @@ const BGTypeToggler: React.FC<{
 
         return (
           <label key={id}>
-            <input
-              type="radio"
-              name={name}
-              value={value}
-              checked={value === selected}
-            />
+            <input type="radio" name={name} value={value} />
             <div>
               <FontAwesomeIcon
                 icon={icon}

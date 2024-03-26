@@ -40,4 +40,14 @@ body {
   .toggler input[type="radio"]:checked + div {
     @apply bg-white text-blue-600;
   }
+
+  /* Page Settings Input Container */
+  .pageSettingsInputContainer label {
+    @apply mb-2 text-sm font-semibold uppercase text-gray-400;
+  }
+
+  .pageSettingsInputContainer input[type="text"],
+  .pageSettingsInputContainer textarea {
+    @apply mb-2.5 block w-full bg-gray-100 p-2;
+  }
 }
