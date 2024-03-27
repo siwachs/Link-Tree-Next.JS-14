@@ -25,7 +25,7 @@ export default async function AppLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="flex">
-          <aside className="h-screen max-h-screen w-48 overflow-scroll bg-white p-4 shadow">
+          <aside className="h-screen max-h-screen w-48 overflow-auto bg-white p-4 shadow">
             <div className="mx-auto mb-12 h-28 w-28 overflow-hidden rounded-full">
               <Image
                 src={session?.user?.image!}
@@ -39,7 +39,7 @@ export default async function AppLayout({
             <SidebarNav />
           </aside>
 
-          <main className="flex-grow">
+          <main className="max-h-screen flex-grow overflow-auto">
             <div className="m-8 bg-white p-4 shadow">{children}</div>
           </main>
         </div>

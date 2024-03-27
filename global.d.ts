@@ -23,6 +23,8 @@ interface PageObject {
   displayName: string;
   location: string;
   bio: string;
+  bgType: string;
+  bgColor: string;
   createdAt: Date | string;
   updatedAt: Date | string;
   __v: number;

@@ -13,7 +13,7 @@ import savePage from "@/actions/savePage";
 const togglerOptions: ToggleOption[] = [
   {
     id: "color",
-    name: "bg-type",
+    name: "bgType",
     value: "color",
     icon: faPalette,
     iconClassName: "h-4 w-4",
@@ -21,8 +21,8 @@ const togglerOptions: ToggleOption[] = [
     label: "Color",
   },
   {
-    id: "width",
-    name: "bg-type",
+    id: "image",
+    name: "bgType",
     value: "image",
     icon: faImage,
     iconClassName: "h-4 w-4",
@@ -31,7 +31,10 @@ const togglerOptions: ToggleOption[] = [
   },
 ];
 
-const initialState = {};
+const initialState = {
+  error: false,
+  errorMessage: "",
+};
 
 const PageSettingsForm: React.FC<{
   page: PageObject;
@@ -41,9 +44,21 @@ const PageSettingsForm: React.FC<{
   const [state, formAction] = useFormState(savePage, initialState);
 
   return (
-    <form action={formAction}>
-      <div className="flex h-60 items-center justify-center bg-gray-300">
-        <BGTypeToggler togglerOptions={togglerOptions} onChange={() => {}} />
+    <form
+      action={formAction}
+      className={`${state.error && "border border-red-500"}`}
+    >
+      <div
+        className="flex h-64 items-center justify-center"
+        style={{ backgroundColor: page.bgColor }}
+      >
+        <div>
+          <BGTypeToggler
+            defaultChecked={page.bgType}
+            togglerOptions={togglerOptions}
+            defaultColor={page.bgColor}
+          />
+        </div>
       </div>
 
       <div className="-mb-8 flex justify-center">
@@ -89,6 +104,12 @@ const PageSettingsForm: React.FC<{
           <FontAwesomeIcon fixedWidth icon={faSave} className="h-4 w-4" />
           <span>Save Page</span>
         </SubmitForm>
+
+        {state.error && (
+          <p aria-live="polite" className="text-sm text-red-600">
+            {state.errorMessage}
+          </p>
+        )}
       </div>
     </form>
   );

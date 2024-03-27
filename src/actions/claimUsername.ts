@@ -11,7 +11,13 @@ export default async function claimUsername(
 ) {
   try {
     const username = formData.get("username")?.toString()?.trim();
-    if (!username) return;
+    if (!username)
+      return {
+        redirect: false,
+        redirectTo: null,
+        error: true,
+        errorMessage: "Username is required.",
+      };
 
     await connect(process.env.MONGODB_URI!);
 
@@ -27,6 +33,7 @@ export default async function claimUsername(
       redirect: true,
       redirectTo: `/account?created=${username}`,
       error: false,
+      errorMessage: "",
     };
   } catch (error: any) {
     if (error.code === 11000) {
@@ -34,7 +41,15 @@ export default async function claimUsername(
         redirect: false,
         redirectTo: null,
         error: true,
+        errorMessage: "Username already taken.",
       };
     }
+
+    return {
+      redirect: false,
+      redirectTo: null,
+      error: true,
+      errorMessage: error.message,
+    };
   }
 }

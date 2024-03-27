@@ -10,6 +10,7 @@ const initialState = {
   redirect: false,
   redirectTo: `/account`,
   error: false,
+  errorMessage: "",
 };
 
 const ClaimUsernameForm: React.FC<{ desiredUsername: string }> = ({
@@ -17,7 +18,7 @@ const ClaimUsernameForm: React.FC<{ desiredUsername: string }> = ({
 }) => {
   // @ts-ignore
   const [state, formAction] = useFormState(claimUsername, initialState);
-  if (state?.redirect) redirect(state?.redirectTo!);
+  if (state.redirect) redirect(state.redirectTo!);
 
   return (
     <form action={formAction}>
@@ -32,15 +33,15 @@ const ClaimUsernameForm: React.FC<{ desiredUsername: string }> = ({
           name="username"
           defaultValue={desiredUsername}
           className={`mx-auto mb-2 block w-full border p-2 text-center outline-none ${
-            state?.error && "border-red-500"
+            state.error && "border-red-500"
           }`}
           type="text"
           placeholder="Username"
         />
 
-        {state?.error && (
+        {state.error && (
           <p aria-live="polite" className="-mt-2 text-sm text-red-600">
-            Username already taken.
+            {state.errorMessage}
           </p>
         )}
 
