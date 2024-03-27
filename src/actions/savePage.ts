@@ -25,6 +25,7 @@ export default async function savePage(prevState: any, formData: FormData) {
     const location = formData.get("location")?.toString()?.trim();
     const bio = formData.get("bio")?.toString()?.trim();
     const bgType = formData.get("bgType");
+    const bgColor = formData.get("bgColor");
     await connect(process.env.MONGODB_URI!);
 
     await Page.updateOne(
@@ -34,6 +35,7 @@ export default async function savePage(prevState: any, formData: FormData) {
         location,
         bio,
         bgType,
+        bgColor,
       },
     );
 

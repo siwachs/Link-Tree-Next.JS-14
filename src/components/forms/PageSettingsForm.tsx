@@ -9,6 +9,7 @@ import SubmitForm from "../buttons/SubmitForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useFormState } from "react-dom";
 import savePage from "@/actions/savePage";
+import { useState } from "react";
 
 const togglerOptions: ToggleOption[] = [
   {
@@ -42,6 +43,8 @@ const PageSettingsForm: React.FC<{
 }> = ({ page, session }) => {
   // @ts-ignore
   const [state, formAction] = useFormState(savePage, initialState);
+  const [bgImage, setBgImage] = useState<string | null>(null);
+  const [bgColor, setBgColor] = useState<string>(page.bgColor);
 
   return (
     <form
@@ -50,15 +53,15 @@ const PageSettingsForm: React.FC<{
     >
       <div
         className="flex h-64 items-center justify-center"
-        style={{ backgroundColor: page.bgColor }}
+        style={{ backgroundColor: bgColor }}
       >
-        <div>
-          <BGTypeToggler
-            defaultChecked={page.bgType}
-            togglerOptions={togglerOptions}
-            defaultColor={page.bgColor}
-          />
-        </div>
+        <BGTypeToggler
+          defaultChecked={page.bgType}
+          togglerOptions={togglerOptions}
+          defaultColor={page.bgColor}
+          setBgColor={setBgColor}
+          setBgImage={setBgImage}
+        />
       </div>
 
       <div className="-mb-8 flex justify-center">
