@@ -43,7 +43,8 @@ const PageSettingsForm: React.FC<{
 }> = ({ page, session }) => {
   // @ts-ignore
   const [state, formAction] = useFormState(savePage, initialState);
-  const [bgImage, setBgImage] = useState<string | null>(null);
+  const [bgType, setBgType] = useState<"color" | "image">(page.bgType);
+  const [bgImage, setBgImage] = useState<string>(page.bgImage);
   const [bgColor, setBgColor] = useState<string>(page.bgColor);
 
   return (
@@ -52,13 +53,21 @@ const PageSettingsForm: React.FC<{
       className={`${state.error && "border border-red-500"}`}
     >
       <div
-        className="flex h-64 items-center justify-center"
-        style={{ backgroundColor: bgColor }}
+        className="flex h-96 items-center justify-center"
+        style={
+          bgType === "color"
+            ? { backgroundColor: bgColor }
+            : {
+                backgroundImage: `url("${bgImage}")`,
+              }
+        }
       >
         <BGTypeToggler
-          defaultChecked={page.bgType}
+          defaultChecked={bgType}
           togglerOptions={togglerOptions}
-          defaultColor={page.bgColor}
+          defaultColor={bgColor}
+          bgType={bgType}
+          setBgType={setBgType}
           setBgColor={setBgColor}
           setBgImage={setBgImage}
         />

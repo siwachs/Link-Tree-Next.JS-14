@@ -2,34 +2,28 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ToggleOption } from "@/../global";
-import React, { useRef, useState } from "react";
+import { useState } from "react";
 import PlainLoader from "../loaders/PlainLoader";
+import { faCloudArrowUp, faPalette } from "@fortawesome/free-solid-svg-icons";
 
 const BGTypeToggler: React.FC<{
   togglerOptions: ToggleOption[];
   defaultChecked: string;
   defaultColor: string;
+  bgType: "color" | "image";
+  setBgType: React.Dispatch<React.SetStateAction<"color" | "image">>;
   setBgColor: React.Dispatch<React.SetStateAction<string>>;
-  setBgImage: React.Dispatch<React.SetStateAction<string | null>>;
+  setBgImage: React.Dispatch<React.SetStateAction<string>>;
 }> = ({
   togglerOptions,
   defaultChecked,
   defaultColor,
+  bgType,
+  setBgType,
   setBgColor,
   setBgImage,
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const colorPickerRef = useRef<HTMLInputElement>(null);
-  const imagePickerRef = useRef<HTMLInputElement>(null);
-
-  const labelClick = (value: string) => () => {
-    if (loading) return;
-    if (value === "color") {
-      colorPickerRef.current?.click();
-    } else {
-      imagePickerRef.current?.click();
-    }
-  };
 
   const fileUploadHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedImage = e.target.files?.[0] || null;
@@ -64,55 +58,85 @@ const BGTypeToggler: React.FC<{
       alert(
         "Invalid File: File must be a image of size less than equal to 1MB.",
       );
-      setBgImage(null);
+      setBgImage("");
     }
   };
 
   return (
-    <div className="toggler shadow">
-      <PlainLoader message="Uploading Image..." loading={loading} />
-      {togglerOptions.map((option) => {
-        const { id, name, value, icon, iconClassName, fixedWidth, label } =
-          option;
+    <div>
+      <div className="toggler shadow">
+        <PlainLoader message="Uploading Image..." loading={loading} />
 
-        return (
-          <label key={id} onClick={labelClick(value)}>
-            <input
-              type="radio"
-              name={name}
-              value={value}
-              defaultChecked={defaultChecked === value}
-            />
-            <div>
-              <FontAwesomeIcon
-                icon={icon}
-                className={iconClassName}
-                fixedWidth={fixedWidth}
+        {togglerOptions.map((option) => {
+          const { id, name, value, icon, iconClassName, fixedWidth, label } =
+            option;
+
+          return (
+            <label key={id}>
+              <input
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  if (loading) return;
+                  setBgType(e.target.value as "color" | "image");
+                }}
+                type="radio"
+                name={name}
+                value={value}
+                defaultChecked={defaultChecked === value}
               />
-              <span>{label}</span>
+              <div>
+                <FontAwesomeIcon
+                  icon={icon}
+                  className={iconClassName}
+                  fixedWidth={fixedWidth}
+                />
+                <span>{label}</span>
+              </div>
+            </label>
+          );
+        })}
+      </div>
+
+      {bgType === "color" ? (
+        <div className="flex justify-center">
+          <label className="mt-2 flex gap-2 bg-white px-4 py-2 shadow">
+            <input
+              hidden
+              type="color"
+              defaultValue={defaultColor}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setBgColor(e.target.value)
+              }
+            />
+            <div className="flex cursor-pointer items-center gap-2">
+              <FontAwesomeIcon
+                fixedWidth
+                icon={faPalette}
+                className="h-7 w-7 text-gray-700"
+              />
+              <span>Change Color</span>
             </div>
           </label>
-        );
-      })}
-
-      <input
-        name="bgColor"
-        type="color"
-        hidden
-        ref={colorPickerRef}
-        defaultValue={defaultColor}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setBgColor(e.target.value)
-        }
-      />
-      <input
-        name="bgImage"
-        type="file"
-        hidden
-        ref={imagePickerRef}
-        accept="image/*"
-        onChange={fileUploadHandler}
-      />
+        </div>
+      ) : (
+        <div className="flex justify-center">
+          <label className="mt-2 flex gap-2 bg-white px-4 py-2 shadow">
+            <input
+              hidden
+              type="file"
+              accept="image/*"
+              onChange={fileUploadHandler}
+            />
+            <div className="flex cursor-pointer items-center gap-2">
+              <FontAwesomeIcon
+                fixedWidth
+                icon={faCloudArrowUp}
+                className="h-7 w-7 text-gray-700"
+              />
+              <span>Change image</span>
+            </div>
+          </label>
+        </div>
+      )}
     </div>
   );
 };
