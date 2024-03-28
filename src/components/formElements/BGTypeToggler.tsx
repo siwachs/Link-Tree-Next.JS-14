@@ -23,6 +23,7 @@ const BGTypeToggler: React.FC<{
   const imagePickerRef = useRef<HTMLInputElement>(null);
 
   const labelClick = (value: string) => () => {
+    if (loading) return;
     if (value === "color") {
       colorPickerRef.current?.click();
     } else {
@@ -44,12 +45,15 @@ const BGTypeToggler: React.FC<{
       try {
         const response = await fetch("/api/upload", {
           method: "POST",
-          headers: { "Content-Type": "multipart/form-data" },
           body: formData,
         });
 
-        const url = await response.json();
-        setBgImage(url);
+        const data = await response.json();
+        if (data.error) {
+          alert(data.message);
+        } else {
+          setBgImage(data.url);
+        }
       } catch (error: any) {
         alert(error.message);
       } finally {

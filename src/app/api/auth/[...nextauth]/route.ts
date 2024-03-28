@@ -15,6 +15,6 @@ export const authOption = {
 };
 
 // @ts-ignore
-const handler = NextAuth(authOption);
+const authHandler = NextAuth(authOption);
 
-export { handler as GET, handler as POST };
+export { authHandler as GET, authHandler as POST };

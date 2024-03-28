@@ -17,7 +17,10 @@ export default async function AccountPage(req: any) {
 
   return page ? (
     <div className="-m-4">
-      <PageSettingsForm page={page} session={session} />
+      <PageSettingsForm
+        page={JSON.parse(JSON.stringify(page))}
+        session={session}
+      />
     </div>
   ) : (
     <ClaimUsernameForm desiredUsername={desiredUsername} />
