@@ -2,11 +2,12 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ToggleOption } from "@/../global";
-import { useState } from "react";
 import PlainLoader from "../loaders/PlainLoader";
 import { faCloudArrowUp, faPalette } from "@fortawesome/free-solid-svg-icons";
 
 const BGTypeToggler: React.FC<{
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   togglerOptions: ToggleOption[];
   defaultChecked: string;
   defaultColor: string;
@@ -15,6 +16,8 @@ const BGTypeToggler: React.FC<{
   setBgColor: React.Dispatch<React.SetStateAction<string>>;
   setBgImage: React.Dispatch<React.SetStateAction<string>>;
 }> = ({
+  loading,
+  setLoading,
   togglerOptions,
   defaultChecked,
   defaultColor,
@@ -23,8 +26,6 @@ const BGTypeToggler: React.FC<{
   setBgColor,
   setBgImage,
 }) => {
-  const [loading, setLoading] = useState<boolean>(false);
-
   const fileUploadHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedImage = e.target.files?.[0] || null;
     if (
@@ -102,6 +103,7 @@ const BGTypeToggler: React.FC<{
             <input
               hidden
               type="color"
+              name="bgColor"
               defaultValue={defaultColor}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setBgColor(e.target.value)
@@ -111,7 +113,7 @@ const BGTypeToggler: React.FC<{
               <FontAwesomeIcon
                 fixedWidth
                 icon={faPalette}
-                className="h-7 w-7 text-gray-700"
+                className="h-6 w-6 text-gray-700"
               />
               <span>Change Color</span>
             </div>
@@ -130,7 +132,7 @@ const BGTypeToggler: React.FC<{
               <FontAwesomeIcon
                 fixedWidth
                 icon={faCloudArrowUp}
-                className="h-7 w-7 text-gray-700"
+                className="h-6 w-6 text-gray-700"
               />
               <span>Change image</span>
             </div>

@@ -1,8 +1,24 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { authOption } from "@/app/api/auth/[...nextauth]/route";
+import Page from "@/models/Page.model.";
+import { connect } from "mongoose";
+import { getServerSession } from "next-auth";
 import uniqid from "uniqid";
 
 async function uploadFile(req: Request, res: Response) {
   try {
+    // @ts-ignore
+    const session = await getServerSession(authOption);
+    if (!session) {
+      return Response.json(
+        {
+          error: true,
+          message: "401 unauthorized User.",
+        },
+        { status: 401 },
+      );
+    }
+
     const formData = await req.formData();
     if (!formData.has("file") || !formData.get("file")) {
       return Response.json(
@@ -54,6 +70,13 @@ async function uploadFile(req: Request, res: Response) {
     );
 
     const url = `https://${bucketName}.s3.amazonaws.com/${newFileName}`;
+    await connect(process.env.MONGODB_URI!);
+    await Page.updateOne(
+      { owner: session?.user?.email },
+      {
+        bgImage: url,
+      },
+    );
 
     return Response.json(
       {

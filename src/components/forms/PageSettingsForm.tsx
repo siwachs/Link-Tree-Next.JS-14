@@ -43,6 +43,7 @@ const PageSettingsForm: React.FC<{
 }> = ({ page, session }) => {
   // @ts-ignore
   const [state, formAction] = useFormState(savePage, initialState);
+  const [loading, setLoading] = useState<boolean>(false);
   const [bgType, setBgType] = useState<"color" | "image">(page.bgType);
   const [bgImage, setBgImage] = useState<string>(page.bgImage);
   const [bgColor, setBgColor] = useState<string>(page.bgColor);
@@ -53,7 +54,7 @@ const PageSettingsForm: React.FC<{
       className={`${state.error && "border border-red-500"}`}
     >
       <div
-        className="flex h-96 items-center justify-center"
+        className="flex h-96 items-center justify-center bg-cover bg-center"
         style={
           bgType === "color"
             ? { backgroundColor: bgColor }
@@ -63,6 +64,8 @@ const PageSettingsForm: React.FC<{
         }
       >
         <BGTypeToggler
+          loading={loading}
+          setLoading={setLoading}
           defaultChecked={bgType}
           togglerOptions={togglerOptions}
           defaultColor={bgColor}
@@ -112,7 +115,7 @@ const PageSettingsForm: React.FC<{
           placeholder="Your Bio goes here..."
         />
 
-        <SubmitForm classNames="max-w-[200px]">
+        <SubmitForm loading={loading} classNames="max-w-[200px]">
           <FontAwesomeIcon fixedWidth icon={faSave} className="h-4 w-4" />
           <span>Save Page</span>
         </SubmitForm>

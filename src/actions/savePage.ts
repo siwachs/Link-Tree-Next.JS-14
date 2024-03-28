@@ -22,22 +22,20 @@ export default async function savePage(prevState: any, formData: FormData) {
         errorMessage: "Session Expired or not available.",
       };
 
-    const location = formData.get("location")?.toString()?.trim();
-    const bio = formData.get("bio")?.toString()?.trim();
-    const bgType = formData.get("bgType");
-    const bgColor = formData.get("bgColor");
-    await connect(process.env.MONGODB_URI!);
+    const dataKeys = ["location", "bio", "bgType", "bgColor"];
+    const dataToUpdate: any = { displayName };
+    for (const key of dataKeys) {
+      if (formData.has(key)) {
+        if (key === "location" || key === "bio") {
+          dataToUpdate[key] = formData.get(key)?.toString()?.trim();
+        } else {
+          dataToUpdate[key] = formData.get(key);
+        }
+      }
+    }
 
-    await Page.updateOne(
-      { owner: session?.user?.email },
-      {
-        displayName,
-        location,
-        bio,
-        bgType,
-        bgColor,
-      },
-    );
+    await connect(process.env.MONGODB_URI!);
+    await Page.updateOne({ owner: session?.user?.email }, dataToUpdate);
 
     return {
       error: false,
