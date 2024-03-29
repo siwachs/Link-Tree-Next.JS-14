@@ -3,10 +3,10 @@
 import { useFormStatus } from "react-dom";
 
 const SubmitForm: React.FC<{
-  loading: boolean;
+  loading?: boolean;
   children: React.ReactNode;
   classNames?: string;
-}> = ({ loading, children, classNames }) => {
+}> = ({ loading = false, children, classNames }) => {
   const { pending } = useFormStatus();
 
   return (

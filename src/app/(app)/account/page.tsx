@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { authOption } from "@/app/api/auth/[...nextauth]/route";
-import { getServerSession, DefaultSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import ClaimUsernameForm from "@/components/forms/ClaimUsernameForm";
 import Page from "@/models/Page.model.";
 import { connect } from "mongoose";
@@ -15,14 +15,12 @@ export default async function AccountPage(req: any) {
   const desiredUsername = req.searchParams?.desiredUsername?.trim();
   await connect(process.env.MONGODB_URI!);
   const page = await Page.findOne({ owner: session?.user?.email });
+  const plainPage = JSON.parse(JSON.stringify(page));
 
   return page ? (
     <>
-      <PageSettingsForm
-        page={JSON.parse(JSON.stringify(page))}
-        session={session}
-      />
-      <PageButtonsForm page={page} session={session} />
+      <PageSettingsForm page={plainPage} session={session} />
+      <PageButtonsForm page={plainPage} session={session} />
     </>
   ) : (
     <ClaimUsernameForm desiredUsername={desiredUsername} />

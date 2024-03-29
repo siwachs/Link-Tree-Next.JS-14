@@ -1,11 +1,17 @@
-import { DefaultSession, User } from "next-auth";
-import { PageObject } from "../../../global";
+"use client";
+
+import { useState } from "react";
+import { useFormState } from "react-dom";
+import { DefaultSession } from "next-auth";
+import { LinkButton, PageObject } from "@/../global";
 import SectionBox from "../layouts/SectionBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEnvelope,
   faPlus,
   faMobile,
+  faClose,
+  faSave,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faDiscord,
@@ -19,49 +25,182 @@ import {
   faSteam,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
+import SubmitForm from "../buttons/SubmitForm";
+
+const allButtons: LinkButton[] = [
+  {
+    key: "email",
+    label: "E-Mail",
+    icon: faEnvelope,
+    type: "email",
+    placeholder: "example@example.com",
+  },
+  {
+    key: "mobile",
+    label: "Mobile",
+    icon: faMobile,
+    type: "tel",
+    placeholder: "+1234567890",
+  },
+  {
+    key: "instagram",
+    label: "Instagram",
+    icon: faInstagram,
+    type: "text",
+    placeholder: "https://www.instagram.com/your_username",
+  },
+  {
+    key: "facebook",
+    label: "Facebook",
+    icon: faFacebook,
+    type: "text",
+    placeholder: "https://www.facebook.com/your_username",
+  },
+  {
+    key: "whatsapp",
+    label: "WhatsApp",
+    icon: faWhatsapp,
+    type: "tel",
+    placeholder: "https://wa.me/1234567890",
+  },
+  {
+    key: "twitter",
+    label: "Twitter",
+    icon: faTwitter,
+    type: "text",
+    placeholder: "https://twitter.com/your_username",
+  },
+  {
+    key: "telegram",
+    label: "Telegram",
+    icon: faTelegram,
+    type: "text",
+    placeholder: "https://t.me/your_username",
+  },
+  {
+    key: "youtube",
+    label: "Youtube",
+    icon: faYoutube,
+    type: "text",
+    placeholder: "https://www.youtube.com/channel/your_channel_id",
+  },
+  {
+    key: "discord",
+    label: "Discord",
+    icon: faDiscord,
+    type: "text",
+    placeholder: "https://discord.com/invite/your_invite_code",
+  },
+  {
+    key: "stream",
+    label: "Stream",
+    icon: faSteam,
+    type: "text",
+    placeholder: "https://www.stream.com/your_username",
+  },
+  {
+    key: "github",
+    label: "GitHub",
+    icon: faGithub,
+    type: "text",
+    placeholder: "https://github.com/your_username",
+  },
+  {
+    key: "stackoverflow",
+    label: "Stackoverflow",
+    icon: faStackOverflow,
+    type: "text",
+    placeholder: "https://stackoverflow.com/users/your_user_id/your_username",
+  },
+];
+
+const initialState = {
+  error: false,
+  errorMessage: "",
+};
 
 const PageButtonsForm: React.FC<{
   page: PageObject;
   session: DefaultSession;
 }> = ({ page, session }) => {
-  const buttons: {
-    key: string;
-    label: string;
-    icon: any;
-  }[] = [
-    { key: "email", label: "E-Mail", icon: faEnvelope },
-    { key: "mobile", label: "Mobile", icon: faMobile },
-    { key: "instagram", label: "Instagram", icon: faInstagram },
-    { key: "facebook", label: "Facebook", icon: faFacebook },
-    { key: "whatsapp", label: "WhatsApp", icon: faWhatsapp },
-    { key: "twitter", label: "Twitter", icon: faTwitter },
-    { key: "telegram", label: "Telegram", icon: faTelegram },
-    { key: "youtube", label: "Youtube", icon: faYoutube },
-    { key: "discord", label: "Discord", icon: faDiscord },
-    { key: "stream", label: "Stream", icon: faSteam },
-    { key: "github", label: "GitHub", icon: faGithub },
-    { key: "stackoverflow", label: "Stackoverflow", icon: faStackOverflow },
-  ];
+  const [activeButtons, setActiveButtons] = useState<LinkButton[]>([]);
+  const addButtonToProfile = (button: LinkButton): void => {
+    setActiveButtons((prevButtons) => [...prevButtons, button]);
+  };
+
+  const availableButtons = allButtons.filter(
+    (button) =>
+      !activeButtons.some((activeButton) => activeButton.key === button.key),
+  );
+
+  // @ts-ignore
+  const [state, formAction] = useFormState(() => {}, initialState);
 
   return (
     <SectionBox classNames="-mt-6">
-      <h2 className="mb-4 text-2xl font-bold">Buttons</h2>
-      <div className="flex flex-wrap gap-2">
-        {buttons.map((button) => (
-          <button
+      <form action={formAction}>
+        <h2 className="mb-4 text-2xl font-bold">Buttons</h2>
+
+        {activeButtons.map((button) => (
+          <label
             key={button.key}
-            className="flex items-center gap-2 rounded-md bg-gray-300 p-2"
+            className="mb-4 flex items-center rounded-md border focus-within:border-blue-500"
           >
-            <FontAwesomeIcon
-              className="h-6 w-6"
-              fixedWidth
-              icon={button.icon}
+            <div className="flex w-40 items-center gap-2 p-2 text-gray-700">
+              <FontAwesomeIcon
+                className="h-7 w-7"
+                fixedWidth
+                icon={button.icon}
+              />
+              <span className="capitalize">{button.label}</span>
+            </div>
+
+            <input
+              name={button.key}
+              type={button.type}
+              placeholder={button.placeholder}
+              className="ml-2 flex-1 border border-none bg-gray-100 px-1 py-2 outline-none"
             />
-            <span className="capitalize">{button.label}</span>
-            <FontAwesomeIcon className="h-4 w-4" fixedWidth icon={faPlus} />
-          </button>
+
+            <FontAwesomeIcon
+              className="mx-2 h-7 w-7 cursor-pointer"
+              fixedWidth
+              icon={faClose}
+              onClick={() => {
+                setActiveButtons((prevButtons) =>
+                  prevButtons.filter((btn) => btn.key !== button.key),
+                );
+              }}
+            />
+          </label>
         ))}
-      </div>
+
+        <div
+          className={`flex flex-wrap gap-2 ${availableButtons.length !== 0 && "my-4 border-y py-4"}`}
+        >
+          {availableButtons.map((button) => (
+            <button
+              onClick={() => addButtonToProfile(button)}
+              key={button.key}
+              type="button"
+              className="flex items-center gap-2 rounded-md bg-gray-300 p-2"
+            >
+              <FontAwesomeIcon
+                className="h-6 w-6"
+                fixedWidth
+                icon={button.icon}
+              />
+              <span className="capitalize">{button.label}</span>
+              <FontAwesomeIcon className="h-4 w-4" fixedWidth icon={faPlus} />
+            </button>
+          ))}
+        </div>
+
+        <SubmitForm classNames="max-w-xs mt-4">
+          <FontAwesomeIcon fixedWidth icon={faSave} className="h-4 w-4" />
+          <span>Save Links</span>
+        </SubmitForm>
+      </form>
     </SectionBox>
   );
 };

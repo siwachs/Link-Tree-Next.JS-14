@@ -25,7 +25,7 @@ export default async function AppLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="flex">
-          <aside className="h-screen max-h-screen w-48 overflow-auto bg-white p-4 pt-8 shadow">
+          <aside className="h-screen max-h-screen w-48 flex-shrink-0 overflow-auto bg-white p-4 pt-8 shadow">
             <div className="relative mx-auto mb-8 h-[128px] w-[128px] overflow-hidden rounded-full">
               <Image
                 src={session?.user?.image!}

@@ -30,3 +30,11 @@ interface PageObject {
   updatedAt: Date | string;
   __v: number;
 }
+
+interface LinkButton {
+  key: string;
+  label: string;
+  icon: any;
+  type: string;
+  placeholder: string;
+}
