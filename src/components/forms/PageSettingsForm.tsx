@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useFormState } from "react-dom";
 import savePage from "@/actions/savePage";
 import { useState } from "react";
+import SectionBox from "../layouts/SectionBox";
 
 const togglerOptions: ToggleOption[] = [
   {
@@ -92,101 +93,103 @@ const PageSettingsForm: React.FC<{
   };
 
   return (
-    <form
-      action={formAction}
-      className={`${state.error && "border border-red-500"}`}
-    >
-      <div
-        className="flex h-96 items-center justify-center bg-cover bg-center"
-        style={
-          bgType === "color"
-            ? { backgroundColor: bgColor }
-            : {
-                backgroundImage: `url("${bgImage}")`,
-              }
-        }
+    <SectionBox>
+      <form
+        action={formAction}
+        className={`${state.error && "border border-red-500"}`}
       >
-        <BGTypeToggler
-          loading={loading}
-          setLoading={setLoading}
-          defaultChecked={bgType}
-          togglerOptions={togglerOptions}
-          defaultColor={bgColor}
-          bgType={bgType}
-          setBgType={setBgType}
-          setBgColor={setBgColor}
-          setBgImage={setBgImage}
-        />
-      </div>
-
-      {/* Profile Picture */}
-      <div className="-mb-12 flex justify-center">
-        <div className="relative -top-8">
-          <div className="relative h-[128px] w-[128px] overflow-hidden rounded-full border-4 border-white shadow shadow-black/50">
-            <Image
-              src={avatarImage}
-              alt="avatar"
-              fill
-              objectFit="cover"
-              objectPosition="center"
-              className="h-full w-full"
-            />
-          </div>
-
-          <label className="absolute -right-2 bottom-0 flex aspect-square items-center rounded-full bg-white p-1 shadow-black/50">
-            <FontAwesomeIcon fixedWidth size="xl" icon={faCloudArrowUp} />
-            <input
-              name="image"
-              hidden
-              type="file"
-              accept="image/*"
-              onChange={fileUploadHandler}
-            />
-          </label>
+        <div
+          className="-m-4 flex h-96 items-center justify-center bg-cover bg-center"
+          style={
+            bgType === "color"
+              ? { backgroundColor: bgColor }
+              : {
+                  backgroundImage: `url("${bgImage}")`,
+                }
+          }
+        >
+          <BGTypeToggler
+            loading={loading}
+            setLoading={setLoading}
+            defaultChecked={bgType}
+            togglerOptions={togglerOptions}
+            defaultColor={bgColor}
+            bgType={bgType}
+            setBgType={setBgType}
+            setBgColor={setBgColor}
+            setBgImage={setBgImage}
+          />
         </div>
-      </div>
 
-      <div className="pageSettingsInputContainer p-4">
-        <label htmlFor="nameInput">Display Name</label>
-        <input
-          required
-          aria-required="true"
-          defaultValue={page.displayName}
-          name="displayName"
-          id="nameInput"
-          type="text"
-          placeholder="John Doe"
-        />
+        {/* Profile Picture */}
+        <div className="-mb-12 flex justify-center">
+          <div className="relative -top-8">
+            <div className="relative h-[128px] w-[128px] overflow-hidden rounded-full border-4 border-white shadow shadow-black/50">
+              <Image
+                src={avatarImage}
+                alt="avatar"
+                fill
+                objectFit="cover"
+                objectPosition="center"
+                className="h-full w-full"
+              />
+            </div>
 
-        <label htmlFor="locationInput">Location</label>
-        <input
-          defaultValue={page.location}
-          name="location"
-          id="locationInput"
-          type="text"
-          placeholder="Someplace in the world"
-        />
+            <label className="absolute -right-2 bottom-0 flex aspect-square items-center rounded-full bg-white p-1 shadow-black/50">
+              <FontAwesomeIcon fixedWidth size="xl" icon={faCloudArrowUp} />
+              <input
+                name="image"
+                hidden
+                type="file"
+                accept="image/*"
+                onChange={fileUploadHandler}
+              />
+            </label>
+          </div>
+        </div>
 
-        <label htmlFor="bioInput">Bio</label>
-        <textarea
-          defaultValue={page.bio}
-          name="bio"
-          id="bioInput"
-          placeholder="Your Bio goes here..."
-        />
+        <div className="pageSettingsInputContainer">
+          <label htmlFor="nameInput">Display Name</label>
+          <input
+            required
+            aria-required="true"
+            defaultValue={page.displayName}
+            name="displayName"
+            id="nameInput"
+            type="text"
+            placeholder="John Doe"
+          />
 
-        <SubmitForm loading={loading} classNames="max-w-[200px]">
-          <FontAwesomeIcon fixedWidth icon={faSave} className="h-4 w-4" />
-          <span>Save Page</span>
-        </SubmitForm>
+          <label htmlFor="locationInput">Location</label>
+          <input
+            defaultValue={page.location}
+            name="location"
+            id="locationInput"
+            type="text"
+            placeholder="Someplace in the world"
+          />
 
-        {state.error && (
-          <p aria-live="polite" className="text-sm text-red-600">
-            {state.errorMessage}
-          </p>
-        )}
-      </div>
-    </form>
+          <label htmlFor="bioInput">Bio</label>
+          <textarea
+            defaultValue={page.bio}
+            name="bio"
+            id="bioInput"
+            placeholder="Your Bio goes here..."
+          />
+
+          <SubmitForm loading={loading} classNames="max-w-[200px]">
+            <FontAwesomeIcon fixedWidth icon={faSave} className="h-4 w-4" />
+            <span>Save Page</span>
+          </SubmitForm>
+
+          {state.error && (
+            <p aria-live="polite" className="text-sm text-red-600">
+              {state.errorMessage}
+            </p>
+          )}
+        </div>
+      </form>
+    </SectionBox>
   );
 };
 

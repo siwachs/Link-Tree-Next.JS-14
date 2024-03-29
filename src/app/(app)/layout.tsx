@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import "../globals.css";
 import { getServerSession } from "next-auth";
 import { authOption } from "../api/auth/[...nextauth]/route";
-import SidebarNav from "@/components/navigations/SidebarNav";
+import SidebarNav from "@/components/layouts/SidebarNav";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,7 +41,7 @@ export default async function AppLayout({
           </aside>
 
           <main className="max-h-screen flex-grow overflow-auto">
-            <div className="m-8 bg-white p-4 shadow">{children}</div>
+            {children}
           </main>
         </div>
       </body>

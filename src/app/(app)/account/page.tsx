@@ -5,6 +5,7 @@ import ClaimUsernameForm from "@/components/forms/ClaimUsernameForm";
 import Page from "@/models/Page.model.";
 import { connect } from "mongoose";
 import PageSettingsForm from "@/components/forms/PageSettingsForm";
+import PageButtonsForm from "@/components/forms/PageButtonsForm";
 
 export default async function AccountPage(req: any) {
   // @ts-ignore
@@ -16,12 +17,13 @@ export default async function AccountPage(req: any) {
   const page = await Page.findOne({ owner: session?.user?.email });
 
   return page ? (
-    <div className="-m-4">
+    <>
       <PageSettingsForm
         page={JSON.parse(JSON.stringify(page))}
         session={session}
       />
-    </div>
+      <PageButtonsForm page={page} session={session} />
+    </>
   ) : (
     <ClaimUsernameForm desiredUsername={desiredUsername} />
   );
