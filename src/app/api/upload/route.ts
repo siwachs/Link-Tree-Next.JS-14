@@ -4,6 +4,7 @@ import Page from "@/models/Page.model.";
 import { connect } from "mongoose";
 import { getServerSession } from "next-auth";
 import uniqid from "uniqid";
+import User from "@/models/User.model";
 
 async function uploadFile(req: Request, res: Response) {
   try {
@@ -93,7 +94,14 @@ async function uploadFile(req: Request, res: Response) {
         );
         break;
       case "image":
-        break;
+        await User.updateOne(
+          {
+            email: session?.user?.email,
+          },
+          {
+            image: url,
+          },
+        );
     }
 
     return Response.json(
