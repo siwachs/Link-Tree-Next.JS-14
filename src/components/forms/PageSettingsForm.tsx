@@ -119,15 +119,19 @@ const PageSettingsForm: React.FC<{
         />
       </div>
 
+      {/* Profile Picture */}
       <div className="-mb-12 flex justify-center">
         <div className="relative -top-8">
-          <Image
-            src={avatarImage}
-            alt="avatar"
-            width={128}
-            height={128}
-            className="rounded-full border-4 border-white shadow shadow-black/50"
-          />
+          <div className="relative h-[128px] w-[128px] overflow-hidden rounded-full border-4 border-white shadow shadow-black/50">
+            <Image
+              src={avatarImage}
+              alt="avatar"
+              fill
+              objectFit="cover"
+              objectPosition="center"
+              className="h-full w-full"
+            />
+          </div>
 
           <label className="absolute -right-2 bottom-0 flex aspect-square items-center rounded-full bg-white p-1 shadow-black/50">
             <FontAwesomeIcon fixedWidth size="xl" icon={faCloudArrowUp} />

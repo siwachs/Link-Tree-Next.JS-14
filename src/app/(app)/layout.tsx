@@ -25,14 +25,15 @@ export default async function AppLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="flex">
-          <aside className="h-screen max-h-screen w-48 overflow-auto bg-white p-4 shadow">
-            <div className="mx-auto mb-12 h-28 w-28 overflow-hidden rounded-full">
+          <aside className="h-screen max-h-screen w-48 overflow-auto bg-white p-4 pt-8 shadow">
+            <div className="relative mx-auto mb-8 h-[128px] w-[128px] overflow-hidden rounded-full">
               <Image
                 src={session?.user?.image!}
                 alt="profile-picture"
-                width={128}
-                height={128}
-                className="rounded-full"
+                fill
+                objectFit="cover"
+                objectPosition="center"
+                className="h-full w-full"
               />
             </div>
 
