@@ -34,7 +34,8 @@ const BGTypeToggler: React.FC<{
       selectedImage.type.startsWith("image/")
     ) {
       const formData = new FormData();
-      formData.set("file", selectedImage);
+      formData.set("name", e.target.name);
+      formData.set("bgImage", selectedImage);
 
       setLoading(true);
       try {
@@ -59,7 +60,6 @@ const BGTypeToggler: React.FC<{
       alert(
         "Invalid File: File must be a image of size less than equal to 1MB.",
       );
-      setBgImage("");
     }
   };
 
@@ -123,6 +123,7 @@ const BGTypeToggler: React.FC<{
         <div className="flex justify-center">
           <label className="mt-2 flex gap-2 bg-white px-4 py-2 shadow">
             <input
+              name="bgImage"
               hidden
               type="file"
               accept="image/*"

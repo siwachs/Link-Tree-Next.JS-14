@@ -2,7 +2,12 @@
 
 import Image from "next/image";
 import { DefaultSession } from "next-auth";
-import { faImage, faPalette, faSave } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCloudArrowUp,
+  faImage,
+  faPalette,
+  faSave,
+} from "@fortawesome/free-solid-svg-icons";
 import BGTypeToggler from "../formElements/BGTypeToggler";
 import { ToggleOption, PageObject } from "@/../global";
 import SubmitForm from "../buttons/SubmitForm";
@@ -44,9 +49,47 @@ const PageSettingsForm: React.FC<{
   // @ts-ignore
   const [state, formAction] = useFormState(savePage, initialState);
   const [loading, setLoading] = useState<boolean>(false);
+  const [avatarImage, setAvatarImage] = useState<string>(session?.user?.image!);
   const [bgType, setBgType] = useState<"color" | "image">(page.bgType);
   const [bgImage, setBgImage] = useState<string>(page.bgImage);
   const [bgColor, setBgColor] = useState<string>(page.bgColor);
+
+  const fileUploadHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedImage = e.target.files?.[0] || null;
+    if (
+      selectedImage &&
+      selectedImage.size <= 1024 * 1024 &&
+      selectedImage.type.startsWith("image/")
+    ) {
+      const formData = new FormData();
+      formData.set("name", e.target.name);
+      formData.set("image", selectedImage);
+
+      setLoading(true);
+      try {
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+        if (data.error) {
+          alert(data.message);
+        } else {
+          setAvatarImage(data.url);
+        }
+      } catch (error: any) {
+        alert(error.message);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      // 1MB = 1024 KB and 1KB = 1024 Bytes so 1024 * 1024 Bytes
+      alert(
+        "Invalid File: File must be a image of size less than equal to 1MB.",
+      );
+    }
+  };
 
   return (
     <form
@@ -76,14 +119,27 @@ const PageSettingsForm: React.FC<{
         />
       </div>
 
-      <div className="-mb-8 flex justify-center">
-        <Image
-          src={session?.user?.image!}
-          alt="avatar"
-          width={128}
-          height={128}
-          className="relative -top-8 rounded-full border-4 border-white shadow shadow-black/50"
-        />
+      <div className="-mb-12 flex justify-center">
+        <div className="relative -top-8">
+          <Image
+            src={avatarImage}
+            alt="avatar"
+            width={128}
+            height={128}
+            className="rounded-full border-4 border-white shadow shadow-black/50"
+          />
+
+          <label className="absolute -right-2 bottom-0 flex aspect-square items-center rounded-full bg-white p-1 shadow-black/50">
+            <FontAwesomeIcon fixedWidth size="xl" icon={faCloudArrowUp} />
+            <input
+              name="image"
+              hidden
+              type="file"
+              accept="image/*"
+              onChange={fileUploadHandler}
+            />
+          </label>
+        </div>
       </div>
 
       <div className="pageSettingsInputContainer p-4">

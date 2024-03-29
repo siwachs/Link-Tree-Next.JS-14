@@ -20,7 +20,19 @@ async function uploadFile(req: Request, res: Response) {
     }
 
     const formData = await req.formData();
-    if (!formData.has("file") || !formData.get("file")) {
+    const name = formData.get("name")?.toString();
+    if (!name) {
+      return Response.json(
+        {
+          error: true,
+          message: "Input name is not set.",
+        },
+        { status: 400 },
+      );
+    }
+
+    const file = formData.get(name) as File;
+    if (!file) {
       return Response.json(
         {
           error: true,
@@ -30,7 +42,6 @@ async function uploadFile(req: Request, res: Response) {
       );
     }
 
-    const file = formData.get("file") as File;
     if (!file.type.startsWith("image/")) {
       return Response.json(
         {
@@ -71,12 +82,19 @@ async function uploadFile(req: Request, res: Response) {
 
     const url = `https://${bucketName}.s3.amazonaws.com/${newFileName}`;
     await connect(process.env.MONGODB_URI!);
-    await Page.updateOne(
-      { owner: session?.user?.email },
-      {
-        bgImage: url,
-      },
-    );
+
+    switch (name) {
+      case "bgImage":
+        await Page.updateOne(
+          { owner: session?.user?.email },
+          {
+            bgImage: url,
+          },
+        );
+        break;
+      case "image":
+        break;
+    }
 
     return Response.json(
       {
@@ -87,7 +105,6 @@ async function uploadFile(req: Request, res: Response) {
       { status: 201 },
     );
   } catch (error: any) {
-    console.log(error);
     return Response.json(
       { error: true, message: error.message },
       {
