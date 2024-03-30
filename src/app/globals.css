@@ -52,7 +52,8 @@ body {
   }
 
   .pageSettingsInputContainer input[type="text"],
-  .pageSettingsInputContainer textarea {
-    @apply mb-2.5 block w-full bg-gray-100 p-2;
+  .pageSettingsInputContainer textarea,
+  .pageLinksInputContainer input[type="text"] {
+    @apply mb-2.5 block w-full rounded-md bg-gray-100 p-2;
   }
 }

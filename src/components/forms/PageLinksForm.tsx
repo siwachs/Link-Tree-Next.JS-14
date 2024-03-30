@@ -3,8 +3,15 @@
 import { PageLink, PageObject } from "@/../global";
 import { useFormState } from "react-dom";
 import SectionBox from "../layouts/SectionBox";
+import { ReactSortable } from "react-sortablejs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faSave } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCloudArrowUp,
+  faGripLines,
+  faLink,
+  faPlus,
+  faSave,
+} from "@fortawesome/free-solid-svg-icons";
 import SubmitForm from "../buttons/SubmitForm";
 import { useState } from "react";
 
@@ -45,10 +52,49 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
           <span>Add New</span>
         </button>
 
-        <div className={`${links.length !== 0 && "my-4 border-y py-4"}`}>
-          {links.map((link, index) => (
-            <div key={index}></div>
-          ))}
+        <div className={`${links.length !== 0 && "my-4 border-b py-4"}`}>
+          {/* @ts-ignore */}
+          <ReactSortable list={links} setList={setLinks}>
+            {links.map((link, index) => (
+              <div
+                key={index}
+                className="pageLinksInputContainer mt-8 flex items-center gap-2"
+              >
+                <FontAwesomeIcon
+                  fixedWidth
+                  icon={faGripLines}
+                  className="mr-2 h-6 w-6 rotate-90 cursor-pointer text-gray-700"
+                />
+
+                <div className="text-center">
+                  <div className="inline-flex rounded-full bg-gray-300 p-2.5">
+                    <FontAwesomeIcon
+                      fixedWidth
+                      icon={faLink}
+                      className="h-6 w-6"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="mt-1.5 flex items-center gap-2 rounded-md border p-1.5 text-gray-700"
+                  >
+                    <FontAwesomeIcon
+                      fixedWidth
+                      icon={faCloudArrowUp}
+                      className="h-6 w-6"
+                    />
+                    <span> Change Icon</span>
+                  </button>
+                </div>
+
+                <div className="pageLinksInputContainer flex-grow">
+                  <input type="text" placeholder="Title" />
+                  <input type="text" placeholder="Subtitle (Optional)" />
+                  <input type="text" placeholder="Link" />
+                </div>
+              </div>
+            ))}
+          </ReactSortable>
         </div>
 
         <SubmitForm classNames="max-w-xs mt-4">
