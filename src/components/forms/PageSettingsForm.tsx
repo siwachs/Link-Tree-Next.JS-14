@@ -13,7 +13,7 @@ import { ToggleOption, PageObject } from "@/../global";
 import SubmitForm from "../buttons/SubmitForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useFormState } from "react-dom";
-import savePage from "@/actions/savePage";
+import { savePage } from "@/actions/savePage";
 import { useState } from "react";
 import SectionBox from "../layouts/SectionBox";
 
@@ -129,9 +129,7 @@ const PageSettingsForm: React.FC<{
                 src={avatarImage}
                 alt="avatar"
                 fill
-                objectFit="cover"
-                objectPosition="center"
-                className="h-full w-full"
+                className="h-full w-full object-cover object-center"
               />
             </div>
 

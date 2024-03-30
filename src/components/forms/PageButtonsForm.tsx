@@ -6,12 +6,14 @@ import { DefaultSession } from "next-auth";
 import { LinkButton, PageObject } from "@/../global";
 import SectionBox from "../layouts/SectionBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ReactSortable } from "react-sortablejs";
 import {
   faEnvelope,
   faPlus,
   faMobile,
   faClose,
   faSave,
+  faGripLines,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faDiscord,
@@ -26,6 +28,7 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import SubmitForm from "../buttons/SubmitForm";
+import { savePageButtons } from "@/actions/savePage";
 
 const allButtons: LinkButton[] = [
   {
@@ -123,57 +126,82 @@ const PageButtonsForm: React.FC<{
   page: PageObject;
   session: DefaultSession;
 }> = ({ page, session }) => {
-  const [activeButtons, setActiveButtons] = useState<LinkButton[]>([]);
-  const addButtonToProfile = (button: LinkButton): void => {
-    setActiveButtons((prevButtons) => [...prevButtons, button]);
-  };
+  // @ts-ignore
+  const [state, formAction] = useFormState(savePageButtons, initialState);
 
+  // Mark Saved Buttons as already active
+  const savedButtonsKeys = Object.keys(page?.buttons || {});
+  const savedButtons: any = savedButtonsKeys
+    .map((key) => allButtons.find((button) => button.key === key))
+    .filter((button) => button !== undefined);
+
+  // Filter Out Available Buttons
+  const [activeButtons, setActiveButtons] =
+    useState<LinkButton[]>(savedButtons);
   const availableButtons = allButtons.filter(
     (button) =>
       !activeButtons.some((activeButton) => activeButton.key === button.key),
   );
 
-  // @ts-ignore
-  const [state, formAction] = useFormState(() => {}, initialState);
+  const addButtonToProfile = (button: LinkButton): void => {
+    setActiveButtons((prevButtons) => [...prevButtons, button]);
+  };
 
   return (
     <SectionBox classNames="-mt-6">
-      <form action={formAction}>
+      <form
+        action={formAction}
+        className={`${state.error && "border border-red-500"}`}
+      >
         <h2 className="mb-4 text-2xl font-bold">Buttons</h2>
 
-        {activeButtons.map((button) => (
-          <label
-            key={button.key}
-            className="mb-4 flex items-center rounded-md border focus-within:border-blue-500"
-          >
-            <div className="flex w-40 items-center gap-2 p-2 text-gray-700">
-              <FontAwesomeIcon
-                className="h-7 w-7"
-                fixedWidth
-                icon={button.icon}
+        {/* @ts-ignore */}
+        <ReactSortable list={activeButtons} setList={setActiveButtons}>
+          {activeButtons.map((button) => (
+            <label
+              key={button.key}
+              className="mb-4 flex items-center rounded-md border focus-within:border-blue-500"
+            >
+              <div className="flex w-48 items-center gap-2.5 p-2 text-gray-700">
+                <FontAwesomeIcon
+                  className="h-5 w-5 cursor-pointer text-gray-400"
+                  fixedWidth
+                  icon={faGripLines}
+                />
+                <FontAwesomeIcon
+                  className="h-7 w-7"
+                  fixedWidth
+                  icon={button.icon}
+                />
+                <span className="select-none capitalize">{button.label}</span>
+              </div>
+
+              <input
+                defaultValue={page.buttons?.[button.key]}
+                name={button.key}
+                type={button.type}
+                placeholder={button.placeholder}
+                className="ml-2 flex-1 border border-none bg-gray-100 px-1 py-2 outline-none"
               />
-              <span className="capitalize">{button.label}</span>
-            </div>
 
-            <input
-              name={button.key}
-              type={button.type}
-              placeholder={button.placeholder}
-              className="ml-2 flex-1 border border-none bg-gray-100 px-1 py-2 outline-none"
-            />
-
-            <FontAwesomeIcon
-              className="mx-2 h-7 w-7 cursor-pointer"
-              fixedWidth
-              icon={faClose}
-              onClick={() => {
-                setActiveButtons((prevButtons) =>
-                  prevButtons.filter((btn) => btn.key !== button.key),
-                );
-              }}
-            />
-          </label>
-        ))}
+              <button
+                type="button"
+                className="mx-2 flex items-center justify-center"
+                onClick={() => {
+                  setActiveButtons((prevButtons) =>
+                    prevButtons.filter((btn) => btn.key !== button.key),
+                  );
+                }}
+              >
+                <FontAwesomeIcon
+                  className="h-7 w-7"
+                  fixedWidth
+                  icon={faClose}
+                />
+              </button>
+            </label>
+          ))}
+        </ReactSortable>
 
         <div
           className={`flex flex-wrap gap-2 ${availableButtons.length !== 0 && "my-4 border-y py-4"}`}
@@ -200,6 +228,12 @@ const PageButtonsForm: React.FC<{
           <FontAwesomeIcon fixedWidth icon={faSave} className="h-4 w-4" />
           <span>Save Links</span>
         </SubmitForm>
+
+        {state.error && (
+          <p aria-live="polite" className="text-sm text-red-600">
+            {state.errorMessage}
+          </p>
+        )}
       </form>
     </SectionBox>
   );

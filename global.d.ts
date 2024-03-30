@@ -26,6 +26,7 @@ interface PageObject {
   bgType: "color" | "image";
   bgColor: string;
   bgImage: string;
+  buttons: any;
   createdAt: Date | string;
   updatedAt: Date | string;
   __v: number;

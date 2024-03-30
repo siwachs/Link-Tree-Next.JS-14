@@ -6,6 +6,11 @@ body {
   @apply bg-gray-100;
 }
 
+/* Drag and Drop Sorting */
+.sortable-ghost {
+  @apply opacity-20;
+}
+
 @layer utilities {
   /* Sidebar Link Styles */
   .sidebarLink {

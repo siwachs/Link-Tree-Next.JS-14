@@ -22,6 +22,8 @@
     "next-auth": "^4.24.7",
     "react": "^18",
     "react-dom": "^18",
+    "react-sortablejs": "^6.1.4",
+    "sortablejs": "^1.15.2",
     "uniqid": "^5.4.0"
   },
   "devDependencies": {

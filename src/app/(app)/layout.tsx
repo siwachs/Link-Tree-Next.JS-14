@@ -33,7 +33,7 @@ export default async function AppLayout({
                 fill
                 objectFit="cover"
                 objectPosition="center"
-                className="h-full w-full"
+                className="h-full w-full object-cover object-center"
               />
             </div>
 
