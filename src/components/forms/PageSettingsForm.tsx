@@ -175,7 +175,7 @@ const PageSettingsForm: React.FC<{
             placeholder="Your Bio goes here..."
           />
 
-          <SubmitForm loading={loading} classNames="max-w-[200px]">
+          <SubmitForm loading={loading} classNames="max-w-xs mt-4">
             <FontAwesomeIcon fixedWidth icon={faSave} className="h-4 w-4" />
             <span>Save Page</span>
           </SubmitForm>

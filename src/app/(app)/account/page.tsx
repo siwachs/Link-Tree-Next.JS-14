@@ -6,6 +6,7 @@ import Page from "@/models/Page.model.";
 import { connect } from "mongoose";
 import PageSettingsForm from "@/components/forms/PageSettingsForm";
 import PageButtonsForm from "@/components/forms/PageButtonsForm";
+import PageLinksForm from "@/components/forms/PageLinksForm";
 
 export default async function AccountPage(req: any) {
   // @ts-ignore
@@ -21,6 +22,7 @@ export default async function AccountPage(req: any) {
     <>
       <PageSettingsForm page={plainPage} session={session} />
       <PageButtonsForm page={plainPage} session={session} />
+      <PageLinksForm page={plainPage} />
     </>
   ) : (
     <ClaimUsernameForm desiredUsername={desiredUsername} />

@@ -27,9 +27,22 @@ interface PageObject {
   bgColor: string;
   bgImage: string;
   buttons: any;
+  links: {
+    title: string;
+    subTitle: string;
+    icon: string;
+    link: string;
+  }[];
   createdAt: Date | string;
   updatedAt: Date | string;
   __v: number;
+}
+
+interface PageLink {
+  title: string;
+  subTitle: string;
+  icon: string;
+  link: string;
 }
 
 interface LinkButton {

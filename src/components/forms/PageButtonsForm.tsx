@@ -226,7 +226,7 @@ const PageButtonsForm: React.FC<{
 
         <SubmitForm classNames="max-w-xs mt-4">
           <FontAwesomeIcon fixedWidth icon={faSave} className="h-4 w-4" />
-          <span>Save Links</span>
+          <span>Save Buttons</span>
         </SubmitForm>
 
         {state.error && (
