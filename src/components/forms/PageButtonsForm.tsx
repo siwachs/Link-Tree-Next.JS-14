@@ -164,7 +164,7 @@ const PageButtonsForm: React.FC<{
             >
               <div className="flex w-48 items-center gap-2.5 p-2 text-gray-700">
                 <FontAwesomeIcon
-                  className="h-5 w-5 cursor-pointer text-gray-400"
+                  className="h-5 w-5 cursor-move text-gray-400"
                   fixedWidth
                   icon={faGripLines}
                 />

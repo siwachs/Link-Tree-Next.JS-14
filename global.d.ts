@@ -39,6 +39,7 @@ interface PageObject {
 }
 
 interface PageLink {
+  key?: string;
   title: string;
   subTitle: string;
   icon: string;

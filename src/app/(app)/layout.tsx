@@ -31,8 +31,6 @@ export default async function AppLayout({
                 src={session?.user?.image!}
                 alt="profile-picture"
                 fill
-                objectFit="cover"
-                objectPosition="center"
                 className="h-full w-full object-cover object-center"
               />
             </div>
