@@ -4,6 +4,7 @@ import { authOption } from "@/app/api/auth/[...nextauth]/route";
 import Page from "@/models/Page.model.";
 import { connect } from "mongoose";
 import { getServerSession } from "next-auth";
+import { PageLink } from "../../global";
 
 export async function savePage(prevState: any, formData: FormData) {
   try {
@@ -84,7 +85,7 @@ export async function savePageButtons(prevState: any, formData: FormData) {
   }
 }
 
-export async function savePageLinks(prevState: any, formData: FormData) {
+export async function savePageLinks(links: PageLink[]) {
   try {
     // @ts-ignore
     const session = await getServerSession(authOption);

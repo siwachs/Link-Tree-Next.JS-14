@@ -6,6 +6,42 @@ import { getServerSession } from "next-auth";
 import uniqid from "uniqid";
 import User from "@/models/User.model";
 
+const awsBucketUpload = async (file: File) => {
+  try {
+    const s3Client = new S3Client({
+      region: process.env.AWS_REGION!,
+      credentials: {
+        accessKeyId: process.env.AWS_S3_ACCESS_KEY!,
+        secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY!,
+      },
+    });
+
+    const newFileName = `${uniqid()}.${file.name.split(".").pop()}`;
+    const bucketName = process.env.AWS_S3_BUCKET_NAME!;
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of file.stream()) {
+      // Process File without load whole file in memory at once.
+      chunks.push(chunk);
+    }
+
+    await s3Client.send(
+      new PutObjectCommand({
+        Bucket: bucketName,
+        Key: newFileName,
+        Body: Buffer.concat(chunks), // Buffer is temporary storage for binary
+        ACL: "public-read", // Data Ownership
+        ContentType: file.type,
+      }),
+    );
+
+    return `https://${bucketName}.s3.amazonaws.com/${newFileName}`;
+  } catch (error: any) {
+    return false;
+  }
+};
+
 async function uploadFile(req: Request, res: Response) {
   try {
     // @ts-ignore
@@ -53,39 +89,12 @@ async function uploadFile(req: Request, res: Response) {
       );
     }
 
-    const s3Client = new S3Client({
-      region: process.env.AWS_REGION!,
-      credentials: {
-        accessKeyId: process.env.AWS_S3_ACCESS_KEY!,
-        secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY!,
-      },
-    });
-
-    const newFileName = `${uniqid()}.${file.name.split(".").pop()}`;
-    const bucketName = process.env.AWS_S3_BUCKET_NAME!;
-    const chunks = [];
-
-    // @ts-ignore
-    for await (const chunk of file.stream()) {
-      // Process File without load whole file in memory at once.
-      chunks.push(chunk);
-    }
-
-    await s3Client.send(
-      new PutObjectCommand({
-        Bucket: bucketName,
-        Key: newFileName,
-        Body: Buffer.concat(chunks), // Buffer is temporary storage for binary
-        ACL: "public-read", // Data Ownership
-        ContentType: file.type,
-      }),
-    );
-
-    const url = `https://${bucketName}.s3.amazonaws.com/${newFileName}`;
+    let url;
     await connect(process.env.MONGODB_URI!);
 
     switch (name) {
       case "bgImage":
+        url = await awsBucketUpload(file);
         await Page.updateOne(
           { owner: session?.user?.email },
           {
@@ -93,7 +102,8 @@ async function uploadFile(req: Request, res: Response) {
           },
         );
         break;
-      case "image":
+      case "profileImage":
+        url = await awsBucketUpload(file);
         await User.updateOne(
           {
             email: session?.user?.email,
@@ -102,6 +112,13 @@ async function uploadFile(req: Request, res: Response) {
             image: url,
           },
         );
+        break;
+      case "linkIcon":
+        url = await awsBucketUpload(file);
+    }
+
+    if (!url) {
+      throw new Error("Error in aws bucket upload.");
     }
 
     return Response.json(

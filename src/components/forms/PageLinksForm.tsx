@@ -1,7 +1,6 @@
 "use client";
 
 import { PageLink, PageObject } from "@/../global";
-import { useFormState } from "react-dom";
 import SectionBox from "../layouts/SectionBox";
 import { ReactSortable } from "react-sortablejs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,14 +17,14 @@ import PlainLoader from "../loaders/PlainLoader";
 import Image from "next/image";
 import { savePageLinks } from "@/actions/savePage";
 
-const initialState = {
-  error: false,
-  errorMessage: "",
-};
-
 const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
-  // @ts-ignore
-  const [state, formAction] = useFormState(savePageLinks, initialState);
+  const [formstate, setFormState] = useState<{
+    error: boolean;
+    errorMessage: string;
+  }>({
+    error: false,
+    errorMessage: "",
+  });
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState<PageLink[]>(page.links || []);
   console.log(links);
@@ -100,12 +99,21 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
     }
   };
 
+  const saveLinks = async () => {
+    try {
+      if (links.length === 0) return;
+      const data = await savePageLinks(links);
+    } catch (error: any) {
+    } finally {
+    }
+  };
+
   return (
     <SectionBox classNames="-mt-6">
       <PlainLoader message="Uploading Icon..." loading={loading} />
       <form
-        action={formAction}
-        className={`${state.error && "border border-red-500"}`}
+        action={saveLinks}
+        className={`${formstate.error && "border border-red-500"}`}
       >
         <h2 className="mb-4 text-2xl font-bold">Links</h2>
         <button
@@ -123,8 +131,13 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
 
         {/* Links... */}
         <div className={`${links.length !== 0 && "my-4 border-b py-4"}`}>
-          {/* @ts-ignore */}
-          <ReactSortable list={links} setList={setLinks}>
+          <ReactSortable
+            handle=".grab"
+            // @ts-ignore
+            list={links}
+            // @ts-ignore
+            setList={setLinks}
+          >
             {links.map((link, index) => (
               <div
                 key={index}
@@ -133,7 +146,7 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
                 <FontAwesomeIcon
                   fixedWidth
                   icon={faGripLines}
-                  className="mr-2 h-6 w-6 rotate-90 cursor-move text-gray-700"
+                  className="grab mr-2 h-6 w-6 rotate-90 cursor-move text-gray-700"
                 />
 
                 <div className="text-center">
@@ -150,7 +163,7 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
                     )}
                   </div>
                   <input
-                    name="link"
+                    name="linkIcon"
                     onChange={(e) => fileUploadHandler(e, link.key!)}
                     type="file"
                     hidden
@@ -209,9 +222,9 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
           <span>Save Links</span>
         </SubmitForm>
 
-        {state.error && (
+        {formstate.error && (
           <p aria-live="polite" className="text-sm text-red-600">
-            {state.errorMessage}
+            {formstate.errorMessage}
           </p>
         )}
       </form>

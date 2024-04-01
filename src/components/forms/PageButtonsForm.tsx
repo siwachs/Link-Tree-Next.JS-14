@@ -155,8 +155,13 @@ const PageButtonsForm: React.FC<{
       >
         <h2 className="mb-4 text-2xl font-bold">Buttons</h2>
 
-        {/* @ts-ignore */}
-        <ReactSortable list={activeButtons} setList={setActiveButtons}>
+        <ReactSortable
+          handle=".grab"
+          // @ts-ignore
+          list={activeButtons}
+          // @ts-ignore
+          setList={setActiveButtons}
+        >
           {activeButtons.map((button) => (
             <label
               key={button.key}
@@ -164,7 +169,7 @@ const PageButtonsForm: React.FC<{
             >
               <div className="flex w-48 items-center gap-2.5 p-2 text-gray-700">
                 <FontAwesomeIcon
-                  className="h-5 w-5 cursor-move text-gray-400"
+                  className="grab h-5 w-5 cursor-move text-gray-400"
                   fixedWidth
                   icon={faGripLines}
                 />

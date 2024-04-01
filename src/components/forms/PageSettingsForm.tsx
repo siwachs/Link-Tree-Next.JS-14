@@ -136,7 +136,7 @@ const PageSettingsForm: React.FC<{
             <label className="absolute -right-2 bottom-0 flex aspect-square items-center rounded-full bg-white p-1 shadow-black/50">
               <FontAwesomeIcon fixedWidth size="xl" icon={faCloudArrowUp} />
               <input
-                name="image"
+                name="profileImage"
                 hidden
                 type="file"
                 accept="image/*"
