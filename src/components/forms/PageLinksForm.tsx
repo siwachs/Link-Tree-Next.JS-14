@@ -27,7 +27,11 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
     errorMessage: "",
   });
   const [loading, setLoading] = useState(false);
-  const [links, setLinks] = useState<PageLink[]>(page.links || []);
+  const [links, setLinks] = useState<PageLink[]>(
+    page.links.map((link) => {
+      return { ...link, key: link._id };
+    }) || [],
+  );
 
   const addNewLink = (): void => {
     setLinks((prev) => [
@@ -68,7 +72,7 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
     ) {
       const formData = new FormData();
       formData.set("name", e.target.name);
-      formData.set("link", selectedImage);
+      formData.set("linkIcon", selectedImage);
 
       setLoading(true);
       try {
@@ -189,7 +193,9 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
                 </div>
 
                 <div className="pageLinksInputContainer flex-grow">
+                  <label htmlFor={`title-${link.key}`}>Title</label>
                   <input
+                    id={`title-${link.key}`}
                     value={link.title}
                     name="title"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -198,7 +204,10 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
                     type="text"
                     placeholder="Title"
                   />
+
+                  <label htmlFor={`subTitle-${link.key}`}>SubTitle</label>
                   <input
+                    id={`subTitle-${link.key}`}
                     value={link.subTitle}
                     name="subTitle"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -207,7 +216,10 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
                     type="text"
                     placeholder="Subtitle (Optional)"
                   />
+
+                  <label htmlFor={`link-${link.key}`}>Link</label>
                   <input
+                    id={`link-${link.key}`}
                     value={link.link}
                     name="link"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -228,13 +240,7 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
                     icon={faClose}
                     onClick={() =>
                       setLinks((prev) =>
-                        prev.filter((linkItem) => {
-                          if (linkItem.key) {
-                            return linkItem.key !== link.key;
-                          }
-
-                          return linkItem._id !== link._id;
-                        }),
+                        prev.filter((linkItem) => linkItem.key !== link.key),
                       )
                     }
                   />

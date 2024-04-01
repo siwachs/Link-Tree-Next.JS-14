@@ -5,6 +5,12 @@ import "../globals.css";
 import { getServerSession } from "next-auth";
 import { authOption } from "../api/auth/[...nextauth]/route";
 import SidebarNav from "@/components/layouts/SidebarNav";
+import { connect } from "mongoose";
+import Page from "@/models/Page.model.";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLink } from "@fortawesome/free-solid-svg-icons";
+import { PageObject } from "@/../global";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +26,10 @@ export default async function AppLayout({
 }>) {
   // @ts-ignore
   const session = await getServerSession(authOption);
+  await connect(process.env.MONGODB_URI!);
+  const page: PageObject | null = await Page.findOne({
+    owner: session?.user?.email,
+  });
 
   return (
     <html lang="en">
@@ -34,6 +44,23 @@ export default async function AppLayout({
                 className="h-full w-full object-cover object-center"
               />
             </div>
+
+            {/* Public Page NavLink */}
+            {page && (
+              <Link
+                target="_blank"
+                href={`/${page.uri}`}
+                className="my-4 flex items-center justify-center gap-1"
+              >
+                <FontAwesomeIcon
+                  size="lg"
+                  className="text-blue-500"
+                  icon={faLink}
+                />
+                <span className="text-xl text-gray-300">/</span>
+                <span>{page.uri}</span>
+              </Link>
+            )}
 
             <SidebarNav />
           </aside>

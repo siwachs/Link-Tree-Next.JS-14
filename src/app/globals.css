@@ -47,7 +47,8 @@ body {
   }
 
   /* Page Settings Input Container */
-  .pageSettingsInputContainer label {
+  .pageSettingsInputContainer label,
+  .pageLinksInputContainer label {
     @apply mb-2 text-sm font-semibold uppercase text-gray-400;
   }
 
