@@ -5,6 +5,7 @@ import SectionBox from "../layouts/SectionBox";
 import { ReactSortable } from "react-sortablejs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faClose,
   faCloudArrowUp,
   faGripLines,
   faLink,
@@ -27,7 +28,6 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
   });
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState<PageLink[]>(page.links || []);
-  console.log(links);
 
   const addNewLink = (): void => {
     setLinks((prev) => [
@@ -54,6 +54,7 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
       ),
     );
   };
+  console.log(links);
 
   const fileUploadHandler = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -103,6 +104,10 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
     try {
       if (links.length === 0) return;
       const data = await savePageLinks(links);
+      setFormState({
+        error: data.error,
+        errorMessage: data.errorMessage,
+      });
     } catch (error: any) {
     } finally {
     }
@@ -146,7 +151,7 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
                 <FontAwesomeIcon
                   fixedWidth
                   icon={faGripLines}
-                  className="grab mr-2 h-6 w-6 rotate-90 cursor-move text-gray-700"
+                  className="grab mr-2 h-6 w-6 rotate-90 cursor-move text-gray-500"
                 />
 
                 <div className="text-center">
@@ -212,6 +217,28 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
                     placeholder="Link"
                   />
                 </div>
+
+                <button
+                  type="button"
+                  className="mx-2 flex items-center justify-center"
+                >
+                  <FontAwesomeIcon
+                    className="h-7 w-7"
+                    fixedWidth
+                    icon={faClose}
+                    onClick={() =>
+                      setLinks((prev) =>
+                        prev.filter((linkItem) => {
+                          if (linkItem.key) {
+                            return linkItem.key !== link.key;
+                          }
+
+                          return linkItem._id !== link._id;
+                        }),
+                      )
+                    }
+                  />
+                </button>
               </div>
             ))}
           </ReactSortable>

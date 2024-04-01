@@ -63,11 +63,14 @@ export async function savePageButtons(prevState: any, formData: FormData) {
     await connect(process.env.MONGODB_URI!);
     const filteredButtons: any = {};
     formData.forEach((value, key) => {
-      const trimmedValue = value?.toString()?.trim();
-      if (trimmedValue && !key.startsWith("$")) {
-        filteredButtons[key] = value;
+      if (!key.startsWith("$")) {
+        const trimmedValue = value?.toString()?.trim();
+        if (trimmedValue) {
+          filteredButtons[key] = trimmedValue.toLocaleLowerCase();
+        }
       }
     });
+
     await Page.updateOne(
       { owner: session?.user?.email },
       { buttons: filteredButtons || {} },
@@ -96,6 +99,19 @@ export async function savePageLinks(links: PageLink[]) {
       };
 
     await connect(process.env.MONGODB_URI!);
+    const filteredLinks = links
+      .map((link) => ({
+        ...link,
+        title: link.title.trim(),
+        subTitle: link.subTitle.trim(),
+        link: link.link.trim(),
+      }))
+      .filter((link) => link.title !== "" && link.link !== "");
+
+    await Page.updateOne(
+      { owner: session?.user?.email },
+      { links: filteredLinks },
+    );
 
     return {
       error: false,

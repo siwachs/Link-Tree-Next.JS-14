@@ -28,6 +28,7 @@ interface PageObject {
   bgImage: string;
   buttons: any;
   links: {
+    _id: string;
     title: string;
     subTitle: string;
     icon: string;
@@ -40,6 +41,7 @@ interface PageObject {
 
 interface PageLink {
   key?: string;
+  _id?: string;
   title: string;
   subTitle: string;
   icon: string;
