@@ -83,3 +83,27 @@ export async function savePageButtons(prevState: any, formData: FormData) {
     };
   }
 }
+
+export async function savePageLinks(prevState: any, formData: FormData) {
+  try {
+    // @ts-ignore
+    const session = await getServerSession(authOption);
+    if (!session)
+      return {
+        error: true,
+        errorMessage: "Session Expired or not available.",
+      };
+
+    await connect(process.env.MONGODB_URI!);
+
+    return {
+      error: false,
+      errorMessage: "",
+    };
+  } catch (error: any) {
+    return {
+      error: true,
+      errorMessage: error.message,
+    };
+  }
+}

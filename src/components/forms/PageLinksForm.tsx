@@ -16,6 +16,7 @@ import SubmitForm from "../buttons/SubmitForm";
 import { useState } from "react";
 import PlainLoader from "../loaders/PlainLoader";
 import Image from "next/image";
+import { savePageLinks } from "@/actions/savePage";
 
 const initialState = {
   error: false,
@@ -24,9 +25,10 @@ const initialState = {
 
 const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
   // @ts-ignore
-  const [state, formAction] = useFormState(() => {}, initialState);
+  const [state, formAction] = useFormState(savePageLinks, initialState);
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState<PageLink[]>(page.links || []);
+  console.log(links);
 
   const addNewLink = (): void => {
     setLinks((prev) => [
@@ -103,7 +105,7 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
       <PlainLoader message="Uploading Icon..." loading={loading} />
       <form
         action={formAction}
-        // className={`${state.error && "border border-red-500"}`}
+        className={`${state.error && "border border-red-500"}`}
       >
         <h2 className="mb-4 text-2xl font-bold">Links</h2>
         <button
@@ -207,11 +209,11 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
           <span>Save Links</span>
         </SubmitForm>
 
-        {/* {state.error && (
+        {state.error && (
           <p aria-live="polite" className="text-sm text-red-600">
             {state.errorMessage}
           </p>
-        )} */}
+        )}
       </form>
     </SectionBox>
   );
