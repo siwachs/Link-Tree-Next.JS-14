@@ -30,7 +30,7 @@ interface PageObject {
   links: {
     _id: string;
     title: string;
-    subTitle: string;
+    description: string;
     icon: string;
     link: string;
   }[];
@@ -43,7 +43,7 @@ interface PageLink {
   key?: string;
   _id?: string;
   title: string;
-  subTitle: string;
+  description: string;
   icon: string;
   link: string;
 }

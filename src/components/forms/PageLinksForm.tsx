@@ -39,7 +39,7 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
       {
         key: Date.now().toString(),
         title: "",
-        subTitle: "",
+        description: "",
         icon: "",
         link: "",
       },
@@ -47,7 +47,9 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>,
     key: string,
   ): void => {
     const name = e.target.name;
@@ -204,16 +206,15 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
                     placeholder="Title"
                   />
 
-                  <label htmlFor={`subTitle-${link.key}`}>SubTitle</label>
-                  <input
-                    id={`subTitle-${link.key}`}
-                    value={link.subTitle}
-                    name="subTitle"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  <label htmlFor={`description-${link.key}`}>Description</label>
+                  <textarea
+                    id={`description-${link.key}`}
+                    value={link.description}
+                    name="description"
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                       handleInputChange(e, link.key!)
                     }
-                    type="text"
-                    placeholder="Subtitle (Optional)"
+                    placeholder="Description (Optional)"
                   />
 
                   <label htmlFor={`link-${link.key}`}>Link</label>

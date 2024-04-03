@@ -103,7 +103,7 @@ export async function savePageLinks(links: PageLink[]) {
       .map((link) => ({
         ...link,
         title: link.title.trim(),
-        subTitle: link.subTitle.trim(),
+        subTitle: link.description.trim(),
         link: link.link.trim(),
       }))
       .filter((link) => link.title !== "" && link.link !== "");

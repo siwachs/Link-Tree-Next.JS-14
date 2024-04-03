@@ -6,8 +6,13 @@ import { LinkButton } from "@/../global";
 import { PageObject } from "@/../global";
 import User from "@/models/User.model";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { faLink, faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+
+const linkPrefixes: any = {
+  email: "mailto:",
+  mobile: "tel:",
+};
 
 export default async function PublicPage({
   params,
@@ -30,7 +35,6 @@ export default async function PublicPage({
               }
         }
       />
-
       <div className="relative -top-16 mx-auto -mb-12 h-36 w-36 overflow-hidden rounded-full">
         <Image
           src={user?.image}
@@ -46,33 +50,49 @@ export default async function PublicPage({
         <FontAwesomeIcon fixedWidth className="h-4 w-4" icon={faLocationDot} />
         <span>{page?.location}</span>
       </h3>
-
       <div className="mx-auto my-2 max-w-sm text-center">
         <p>{page?.bio}</p>
       </div>
 
-      <div className="flex justify-center gap-2">
+      <div className="mt-6 flex justify-center gap-2 pb-4">
         {Object.entries(page?.buttons)?.map(([key, value]) => {
           const button: LinkButton | undefined = allButtons.find(
             (button) => button.key === key,
           );
+          const link = value as string;
 
           return (
             <Link
               key={key}
-              href={value as string}
+              href={linkPrefixes[key] ? `${linkPrefixes[key]}${link}` : link}
               target="_blank"
-              className="flex rounded-full border border-white p-2"
+              className="rounded-full bg-white p-2 text-blue-600"
             >
               <FontAwesomeIcon
                 fixedWidth
                 className="h-6 w-6"
                 icon={button?.icon}
               />
-              {value as string}
             </Link>
           );
         })}
+      </div>
+
+      <div>
+        {page?.links.map((link) => (
+          <Link key={link._id} href={link.link} target="_blank">
+            <div>
+              {link.icon === "" ? (
+                <FontAwesomeIcon fixedWidth icon={faLink} size="xl" />
+              ) : (
+                <Image src={link.icon} alt="icon" />
+              )}
+            </div>
+            <div>
+              <h3>{link.title}</h3>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ const PageSchema = new Schema(
     links: [
       {
         title: { type: String, required: true },
-        subTitle: { type: String, default: "" },
+        description: { type: String, default: "" },
         icon: { type: String, default: "" },
         link: { type: String, required: true },
       },
