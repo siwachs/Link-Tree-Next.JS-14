@@ -58,7 +58,6 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
       ),
     );
   };
-  console.log(links);
 
   const fileUploadHandler = async (
     e: React.ChangeEvent<HTMLInputElement>,
