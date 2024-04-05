@@ -8,6 +8,7 @@ import User from "@/models/User.model";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink, faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import PageAnalytic from "@/models/PageAnalytic.model";
 
 const linkPrefixes: any = {
   email: "mailto:",
@@ -22,6 +23,7 @@ export default async function PublicPage({
   await connect(process.env.MONGODB_URI!);
   const page: PageObject | null = await Page.findOne({ uri: params.uri! });
   const user = await User.findOne({ email: page?.owner });
+  await PageAnalytic.create({ uri: params.uri!, type: "view" });
 
   return (
     <div className="min-h-screen bg-blue-950 text-white">
@@ -60,11 +62,15 @@ export default async function PublicPage({
             (button) => button.key === key,
           );
           const link = value as string;
+          const processedLink = linkPrefixes[key]
+            ? `${linkPrefixes[key]}${link}`
+            : link;
 
           return (
             <Link
+              ping={`/api/click/${processedLink}`}
               key={key}
-              href={linkPrefixes[key] ? `${linkPrefixes[key]}${link}` : link}
+              href={processedLink}
               target="_blank"
               className="rounded-full bg-white p-2 text-blue-600"
             >
@@ -81,6 +87,7 @@ export default async function PublicPage({
       <div className="mx-auto grid max-w-2xl grid-cols-1 place-items-center gap-2 p-4 sm:grid-cols-2 sm:gap-6">
         {page?.links.map((link) => (
           <Link
+            ping={`/api/click/${link.link}`} // Hit a endpoint before open the URL
             key={link._id}
             href={link.link}
             target="_blank"
