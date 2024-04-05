@@ -78,13 +78,13 @@ export default async function PublicPage({
         })}
       </div>
 
-      <div className="mx-auto grid max-w-2xl gap-6 px-8 py-4 md:grid-cols-2">
+      <div className="mx-auto grid max-w-2xl grid-cols-1 place-items-center gap-2 p-4 sm:grid-cols-2 sm:gap-6">
         {page?.links.map((link) => (
           <Link
             key={link._id}
             href={link.link}
             target="_blank"
-            className="flex max-w-xs items-center rounded-md bg-indigo-900 p-2"
+            className="flex w-full max-w-xs items-center rounded-md bg-indigo-900 p-2"
           >
             <div className="relative -left-4 flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-md bg-blue-700">
               {link.icon === "" ? (
