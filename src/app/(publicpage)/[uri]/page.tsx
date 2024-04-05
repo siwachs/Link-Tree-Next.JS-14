@@ -24,7 +24,7 @@ export default async function PublicPage({
   const user = await User.findOne({ email: page?.owner });
 
   return (
-    <div className="bg-blue-950 text-white">
+    <div className="min-h-screen bg-blue-950 text-white">
       <div
         className="h-96 bg-cover bg-center"
         style={
@@ -78,18 +78,33 @@ export default async function PublicPage({
         })}
       </div>
 
-      <div>
+      <div className="mx-auto grid max-w-2xl gap-6 px-8 py-4 md:grid-cols-2">
         {page?.links.map((link) => (
-          <Link key={link._id} href={link.link} target="_blank">
-            <div>
+          <Link
+            key={link._id}
+            href={link.link}
+            target="_blank"
+            className="flex max-w-xs items-center rounded-md bg-indigo-900 p-2"
+          >
+            <div className="relative -left-4 flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-md bg-blue-700">
               {link.icon === "" ? (
-                <FontAwesomeIcon fixedWidth icon={faLink} size="xl" />
+                <FontAwesomeIcon fixedWidth icon={faLink} className="h-8 w-8" />
               ) : (
-                <Image src={link.icon} alt="icon" />
+                <Image
+                  fill
+                  src={link.icon}
+                  alt="link"
+                  className="h-full w-full object-cover object-center"
+                  sizes="33vw"
+                />
               )}
             </div>
+
             <div>
               <h3>{link.title}</h3>
+              <p className="line-clamp-2 text-sm text-white/50">
+                {link.description}
+              </p>
             </div>
           </Link>
         ))}

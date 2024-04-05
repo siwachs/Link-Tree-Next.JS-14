@@ -169,6 +169,7 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
                         src={link.icon}
                         alt="link"
                         className="h-full w-full object-cover object-center"
+                        sizes="33vw"
                       />
                     )}
                   </div>
