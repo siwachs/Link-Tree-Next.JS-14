@@ -7,7 +7,11 @@ const click = async (req: Request, res: Response) => {
     await connect(process.env.MONGODB_URI!);
     const { url, type, uri } = await req.json();
 
-    await PageAnalytic.create({ url, type, uri });
+    await PageAnalytic.create({
+      url: url ? decodeURI(atob(url)) : null,
+      type,
+      uri,
+    });
     return Response.json(
       { error: false, massage: "Click logged." },
       { status: 201 },
