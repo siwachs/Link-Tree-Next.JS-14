@@ -7,7 +7,7 @@ import { PageObject } from "@/../global";
 import User from "@/models/User.model";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink, faLocationDot } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
+import Link from "@/components/Link";
 import PageAnalytic from "@/models/PageAnalytic.model";
 
 const linkPrefixes: any = {
@@ -62,17 +62,23 @@ export default async function PublicPage({
             (button) => button.key === key,
           );
           const link = value as string;
-          const processedLink = linkPrefixes[key]
+          const processedLink: string = linkPrefixes[key]
             ? `${linkPrefixes[key]}${link}`
             : link;
+          const base64EncodedData = btoa(encodeURI(processedLink));
 
           return (
             <Link
-              ping={`/api/click/${processedLink}`}
               key={key}
               href={processedLink}
               target="_blank"
-              className="rounded-full bg-white p-2 text-blue-600"
+              analytics
+              beaconData={{
+                url: base64EncodedData,
+                type: "click",
+                uri: params.uri!,
+              }}
+              classNames="rounded-full bg-white p-2 text-blue-600"
             >
               <FontAwesomeIcon
                 fixedWidth
@@ -85,36 +91,49 @@ export default async function PublicPage({
       </div>
 
       <div className="mx-auto grid max-w-2xl grid-cols-1 place-items-center gap-2 p-4 sm:grid-cols-2 sm:gap-6">
-        {page?.links.map((link) => (
-          <Link
-            ping={`/api/click/${link.link}`} // Hit a endpoint before open the URL
-            key={link._id}
-            href={link.link}
-            target="_blank"
-            className="flex w-full max-w-xs items-center rounded-md bg-indigo-900 p-2"
-          >
-            <div className="relative -left-4 flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-md bg-blue-700">
-              {link.icon === "" ? (
-                <FontAwesomeIcon fixedWidth icon={faLink} className="h-8 w-8" />
-              ) : (
-                <Image
-                  fill
-                  src={link.icon}
-                  alt="link"
-                  className="h-full w-full object-cover object-center"
-                  sizes="33vw"
-                />
-              )}
-            </div>
+        {page?.links.map((link) => {
+          const base64EncodedData = btoa(encodeURI(link.link));
 
-            <div>
-              <h3>{link.title}</h3>
-              <p className="line-clamp-2 text-sm text-white/50">
-                {link.description}
-              </p>
-            </div>
-          </Link>
-        ))}
+          return (
+            <Link
+              key={link._id}
+              href={link.link}
+              target="_blank"
+              analytics
+              beaconData={{
+                url: base64EncodedData,
+                type: "click",
+                uri: params.uri!,
+              }}
+              classNames="flex w-full max-w-xs items-center rounded-md bg-indigo-900 p-2"
+            >
+              <div className="relative -left-4 flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-md bg-blue-700">
+                {link.icon === "" ? (
+                  <FontAwesomeIcon
+                    fixedWidth
+                    icon={faLink}
+                    className="h-8 w-8"
+                  />
+                ) : (
+                  <Image
+                    fill
+                    src={link.icon}
+                    alt="link"
+                    className="h-full w-full object-cover object-center"
+                    sizes="33vw"
+                  />
+                )}
+              </div>
+
+              <div>
+                <h3>{link.title}</h3>
+                <p className="line-clamp-2 text-sm text-white/50">
+                  {link.description}
+                </p>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

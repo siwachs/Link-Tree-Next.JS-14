@@ -11,6 +11,7 @@ const PageAnalyticSchema = new Schema(
       type: String,
       required: true,
     },
+    url: String,
   },
   { timestamps: true },
 );
