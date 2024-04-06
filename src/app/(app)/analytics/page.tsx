@@ -1,3 +1,4 @@
+import { PipelineStage } from "mongoose";
 import { authOption } from "@/app/api/auth/[...nextauth]/route";
 import SectionBox from "@/components/layouts/SectionBox";
 import PageAnalytic from "@/models/PageAnalytic.model";
@@ -5,7 +6,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { PageObject } from "@/../global";
 import Page from "@/models/Page.model.";
-import Chart from "@/components/chart";
+import Chart from "@/components/Chart";
 
 export default async function AnalyticsPage() {
   // @ts-ignore
@@ -16,13 +17,19 @@ export default async function AnalyticsPage() {
     owner: session.user?.email,
   });
 
-  const aggregatePipeline = (uri: string | undefined, type: string) => [
+  const aggregatePipeline = (
+    uri: string | undefined,
+    type: string,
+  ): PipelineStage[] => [
+    // Stage 1
     {
       $match: {
         type: type,
         uri: uri,
       },
     },
+
+    // Stage 2
     {
       $group: {
         _id: {
@@ -34,11 +41,19 @@ export default async function AnalyticsPage() {
         count: { $sum: 1 },
       },
     },
+
+    // Stage 3
+    {
+      $sort: {
+        _id: 1, // 1 for ascending order, -1 for descending order
+      },
+    },
   ];
 
   const viewCountsresult = await PageAnalytic.aggregate(
     aggregatePipeline(page?.uri, "view"),
   );
+
   const clickCountsresult = await PageAnalytic.aggregate(
     aggregatePipeline(page?.uri, "click"),
   );
@@ -54,7 +69,7 @@ export default async function AnalyticsPage() {
 
   return (
     <SectionBox>
-      <Chart />
+      <Chart data={viewCounts} />
     </SectionBox>
   );
 }
