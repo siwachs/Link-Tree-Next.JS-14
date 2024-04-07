@@ -31,7 +31,7 @@ const Chart: React.FC<{
           axisLine={false}
           tickLine={false}
           tickMargin={10}
-          tick={{ fill: "#aaa" }}
+          tick={{ fill: "#aaa", fontSize: 14 }}
         />
         <YAxis
           axisLine={false}

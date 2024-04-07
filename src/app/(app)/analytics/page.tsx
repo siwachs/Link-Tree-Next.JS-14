@@ -11,6 +11,10 @@ import { redirect } from "next/navigation";
 import { PageObject } from "@/../global";
 import Page from "@/models/Page.model.";
 import Chart from "@/components/charts/Chart";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Image from "next/image";
+import { faLink } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 export default async function AnalyticsPage() {
   // @ts-ignore
@@ -34,6 +38,13 @@ export default async function AnalyticsPage() {
 
     // Stage 2
     {
+      $sort: {
+        createdAt: 1, // Sorting in ascending order by createdAt date, use -1 for descending order
+      },
+    },
+
+    // Stage 3
+    {
       $group: {
         _id: {
           $dateToString: {
@@ -42,13 +53,6 @@ export default async function AnalyticsPage() {
           },
         },
         count: { $sum: 1 },
-      },
-    },
-
-    // Stage 3
-    {
-      $sort: {
-        _id: 1, // 1 for ascending order, -1 for descending order
       },
     },
   ];
@@ -188,15 +192,99 @@ export default async function AnalyticsPage() {
     }
   }
 
+  const sortByDate = (a: any, b: any) => {
+    const dateA: any = new Date(a.date.split("-").reverse().join("-"));
+    const dateB: any = new Date(b.date.split("-").reverse().join("-"));
+    return dateA - dateB;
+  };
+
+  mergedAnalytics.sort(sortByDate);
+
+  // Link Clicks Analytics
+  const clicks = await PageAnalytic.find({ uri: page?.uri, type: "click" });
+
   return (
-    <SectionBox>
-      <h2 className="mb-6 text-center text-xl font-semibold">Page Analytics</h2>
-      <Chart data={mergedAnalytics} combined />
+    <>
+      <SectionBox classNames="min-h-[512px]">
+        <h2 className="mb-6 text-center text-xl font-semibold">
+          Page Analytics
+        </h2>
+        <Chart data={mergedAnalytics} combined />
+      </SectionBox>
 
-      <h2 className="my-6 text-center text-xl font-semibold">Views</h2>
-      <Chart data={mergedAnalytics} dataKey="views" />
+      <SectionBox classNames="-mt-6 min-h-[512px]">
+        <h2 className="my-6 text-center text-xl font-semibold">Views</h2>
+        <Chart data={mergedAnalytics} dataKey="views" />
+      </SectionBox>
 
-      <h2 className="my-6 text-center text-xl font-semibold">Clicks</h2>
-    </SectionBox>
+      <SectionBox classNames="-mt-6">
+        <h2 className="mb-6 text-center text-xl font-semibold">Clicks</h2>
+
+        {page?.links.map((link) => (
+          <div
+            key={link._id}
+            className="flex items-center gap-4 border-t border-gray-200 px-2 py-4"
+          >
+            <div className="relative inline-flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-sm">
+              {!link.icon ? (
+                <FontAwesomeIcon
+                  fixedWidth
+                  icon={faLink}
+                  size="xl"
+                  className="text-blue-500"
+                />
+              ) : (
+                <Image
+                  fill
+                  src={link.icon}
+                  alt="link"
+                  className="h-full w-full object-cover object-center"
+                  sizes="33vw"
+                />
+              )}
+            </div>
+
+            <div className="flex-1">
+              <h3>{link.title}</h3>
+              <p className="line-clamp-2 text-sm text-gray-700">
+                {link.description}
+              </p>
+              <Link
+                className="text-sm text-blue-400"
+                href={link.link}
+                target="_blank"
+              >
+                {link.link}
+              </Link>
+            </div>
+
+            <div className="rounded-md border p-2 text-center">
+              <div className="text-3xl">
+                {
+                  clicks.filter(
+                    (click) =>
+                      click.url === link.link &&
+                      new Date(click.createdAt).toDateString() ===
+                        new Date().toDateString(),
+                  ).length
+                }
+              </div>
+              <div className="text-xs font-bold uppercase text-gray-400">
+                Clicks Today
+              </div>
+            </div>
+
+            <div className="rounded-md border p-2 text-center">
+              <div className="text-3xl">
+                {clicks.filter((click) => click.url === link.link).length}
+              </div>
+              <div className="text-xs font-bold uppercase text-gray-400">
+                Clicks Alltime
+              </div>
+            </div>
+          </div>
+        ))}
+      </SectionBox>
+    </>
   );
 }
