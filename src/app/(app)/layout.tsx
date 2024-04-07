@@ -8,7 +8,7 @@ import SidebarNav from "@/components/layouts/SidebarNav";
 import { connect } from "mongoose";
 import Page from "@/models/Page.model.";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLink } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faLink } from "@fortawesome/free-solid-svg-icons";
 import { PageObject } from "@/../global";
 import Link from "next/link";
 
@@ -34,8 +34,25 @@ export default async function AppLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex">
-          <aside className="h-screen max-h-screen w-48 flex-shrink-0 overflow-auto bg-white p-4 pt-8 shadow">
+        <div className="md:flex">
+          <input id="menu-toggler" type="checkbox" hidden />
+          <label
+            htmlFor="menu-toggler"
+            className="backdrop fixed inset-0 z-10 hidden bg-black/80 md:static"
+          />
+
+          <label
+            htmlFor="menu-toggler"
+            className="ml-8 mt-4 inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-md bg-white p-2 shadow md:hidden"
+          >
+            <FontAwesomeIcon icon={faBars} className="h-4 w-4" />
+            <span>Menu</span>
+          </label>
+
+          <aside
+            id="menu"
+            className="fixed -left-[100%] bottom-0 top-0 z-20 h-screen max-h-screen w-48 flex-shrink-0 overflow-auto bg-white p-4 pt-8 shadow transition-all md:static"
+          >
             <div className="relative mx-auto mb-8 h-[128px] w-[128px] overflow-hidden rounded-full">
               <Image
                 src={session?.user?.image!}
