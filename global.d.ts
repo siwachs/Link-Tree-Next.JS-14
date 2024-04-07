@@ -55,3 +55,14 @@ interface LinkButton {
   type: string;
   placeholder: string;
 }
+
+interface AnalyticAggregationObject {
+  _id: string;
+  count: number;
+}
+
+interface TransformedAggregationObject {
+  date: string;
+  views: number;
+  clicks: number;
+}
