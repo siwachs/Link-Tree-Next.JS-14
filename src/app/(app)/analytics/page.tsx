@@ -223,7 +223,7 @@ export default async function AnalyticsPage() {
         {page?.links.map((link) => (
           <div
             key={link._id}
-            className="flex items-center gap-4 border-t border-gray-200 px-2 py-4"
+            className="items-center gap-4 border-t border-gray-200 px-2 py-4 text-center md:flex md:text-left"
           >
             <div className="relative inline-flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-sm">
               {!link.icon ? (
@@ -274,7 +274,7 @@ export default async function AnalyticsPage() {
               </div>
             </div>
 
-            <div className="rounded-md border p-2 text-center">
+            <div className="mt-1 rounded-md border p-2 text-center md:mt-0">
               <div className="text-3xl">
                 {clicks.filter((click) => click.url === link.link).length}
               </div>

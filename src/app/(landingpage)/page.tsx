@@ -8,11 +8,11 @@ export default async function Home() {
 
   return (
     <section className="pt-32">
-      <div className="max-w-md mb-6">
-        <h1 className="text-6xl font-bold">
+      <div className="mb-6 max-w-md">
+        <h1 className="text-3xl font-bold sm:text-6xl">
           Your one link <br /> for everything
         </h1>
-        <h2 className="text-gray-500 text-xl mt-6">
+        <h2 className="mt-6 text-lg text-gray-500 sm:text-xl">
           Share your links, music, social profiles, contact information and more
           on one page
         </h2>

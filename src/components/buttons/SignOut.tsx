@@ -9,7 +9,7 @@ const SignOut: React.FC<{
   textClassName?: string;
   btnSize?: string;
 }> = ({
-  loadedBtnClassName = "flex gap-2 items-center border py-2 px-4 shadow",
+  loadedBtnClassName = "flex gap-2 items-center border py-2 px-4 shadow rounded-md",
   textClassName,
   btnSize,
 }) => {
