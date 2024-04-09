@@ -41,10 +41,7 @@ const Header: React.FC = async () => {
               <SignOut textClassName="hidden sm:inline" btnSize="h-4 w-4" />
             </>
           ) : (
-            <>
-              <Link href="/signin">Sign in</Link>
-              <Link href="/register">Create Account</Link>
-            </>
+            <Link href="/signin">Sign in</Link>
           )}
         </nav>
       </div>

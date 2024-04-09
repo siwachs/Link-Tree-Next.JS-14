@@ -21,7 +21,7 @@ export default async function AccountPage(req: any) {
   return page ? (
     <>
       <PageSettingsForm page={plainPage} session={session} />
-      <PageButtonsForm page={plainPage} session={session} />
+      <PageButtonsForm page={plainPage} />
       <PageLinksForm page={plainPage} />
     </>
   ) : (

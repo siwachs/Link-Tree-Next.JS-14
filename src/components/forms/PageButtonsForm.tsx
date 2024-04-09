@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useFormState } from "react-dom";
-import { DefaultSession } from "next-auth";
 import { PageObject, LinkButton } from "@/../global";
 import SectionBox from "../layouts/SectionBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,16 +23,15 @@ const initialState = {
 
 const PageButtonsForm: React.FC<{
   page: PageObject;
-  session: DefaultSession;
-}> = ({ page, session }) => {
+}> = ({ page }) => {
   // @ts-ignore
   const [state, formAction] = useFormState(savePageButtons, initialState);
 
   // Mark Saved Buttons as already active
   const savedButtonsKeys = Object.keys(page?.buttons || {});
-  const savedButtons: any = savedButtonsKeys
-    .map((key) => allButtons.find((button) => button.key === key))
-    .filter((button) => button !== undefined);
+  const savedButtons: any = savedButtonsKeys.map((key) =>
+    allButtons.find((button) => button.key === key),
+  );
 
   // Filter Out Available Buttons
   const [activeButtons, setActiveButtons] =
@@ -47,8 +45,14 @@ const PageButtonsForm: React.FC<{
     setActiveButtons((prevButtons) => [...prevButtons, button]);
   };
 
+  const removeActiveButton = (button: LinkButton) => {
+    setActiveButtons((prevButtons) =>
+      prevButtons.filter((btn) => btn.key !== button.key),
+    );
+  };
+
   return (
-    <SectionBox classNames="-mt-6">
+    <SectionBox classNames="-mt-2 sm:-mt-6">
       <form
         action={formAction}
         className={`${state.error && "border border-red-500"}`}
@@ -64,39 +68,39 @@ const PageButtonsForm: React.FC<{
         >
           {activeButtons.map((button) => (
             <label
+              aria-label={button.key}
               key={button.key}
-              className="mb-4 flex items-center rounded-md border focus-within:border-blue-500"
+              className="mb-4 flex items-center justify-between gap-2 rounded-md border px-1 focus-within:border-blue-500"
             >
-              <div className="flex w-48 items-center gap-2.5 p-2 text-gray-700">
-                <FontAwesomeIcon
-                  className="grab h-5 w-5 cursor-move text-gray-400"
-                  fixedWidth
-                  icon={faGripLines}
-                />
-                <FontAwesomeIcon
-                  className="h-7 w-7"
-                  fixedWidth
-                  icon={button.icon}
-                />
-                <span className="select-none capitalize">{button.label}</span>
-              </div>
-
-              <input
-                defaultValue={page.buttons?.[button.key]}
-                name={button.key}
-                type={button.type}
-                placeholder={button.placeholder}
-                className="ml-2 flex-1 border border-none bg-gray-100 px-1 py-2 outline-none"
+              <FontAwesomeIcon
+                className="grab h-5 w-5 cursor-move text-gray-400"
+                fixedWidth
+                icon={faGripLines}
               />
+
+              <div className="flex flex-1 flex-col sm:flex-row">
+                <div className="flex w-48 items-center gap-2.5 p-2 text-gray-700">
+                  <FontAwesomeIcon
+                    className="h-7 w-7"
+                    fixedWidth
+                    icon={button.icon}
+                  />
+                  <span className="select-none capitalize">{button.label}</span>
+                </div>
+
+                <input
+                  defaultValue={page.buttons?.[button.key]}
+                  name={button.key}
+                  type={button.type}
+                  placeholder={button.placeholder}
+                  className="mb-1 ml-2 w-full flex-1 rounded-md border border-none bg-gray-100 px-1 py-2 outline-none sm:mb-0 sm:rounded-none"
+                />
+              </div>
 
               <button
                 type="button"
                 className="mx-2 flex items-center justify-center"
-                onClick={() => {
-                  setActiveButtons((prevButtons) =>
-                    prevButtons.filter((btn) => btn.key !== button.key),
-                  );
-                }}
+                onClick={() => removeActiveButton(button)}
               >
                 <FontAwesomeIcon
                   className="h-7 w-7"

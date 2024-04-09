@@ -3,7 +3,9 @@ const SectionBox: React.FC<{
   classNames?: string;
 }> = ({ children, classNames }) => {
   return (
-    <div className={`m-8 bg-white p-4 shadow ${classNames}`}>{children}</div>
+    <div className={`m-4 bg-white p-4 shadow sm:m-8 ${classNames}`}>
+      {children}
+    </div>
   );
 };
 

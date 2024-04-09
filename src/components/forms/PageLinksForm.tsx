@@ -19,13 +19,14 @@ import Image from "next/image";
 import { savePageLinks } from "@/actions/savePage";
 
 const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
-  const [formstate, setFormState] = useState<{
+  const [formState, setFormState] = useState<{
     error: boolean;
     errorMessage: string;
   }>({
     error: false,
     errorMessage: "",
   });
+
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState<PageLink[]>(
     page.links.map((link) => {
@@ -113,17 +114,15 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
         error: data.error,
         errorMessage: data.errorMessage,
       });
-    } catch (error: any) {
-    } finally {
-    }
+    } catch (error: any) {}
   };
 
   return (
-    <SectionBox classNames="-mt-6">
+    <SectionBox classNames="-mt-2 sm:-mt-6">
       <PlainLoader message="Uploading Icon..." loading={loading} />
       <form
         action={saveLinks}
-        className={`${formstate.error && "border border-red-500"}`}
+        className={`${formState.error && "border border-red-500"}`}
       >
         <h2 className="mb-4 text-2xl font-bold">Links</h2>
         <button
@@ -148,104 +147,111 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
             // @ts-ignore
             setList={setLinks}
           >
-            {links.map((link, index) => (
+            {links.map((link) => (
               <div
-                key={index}
-                className="pageLinksInputContainer mt-8 flex items-center gap-2"
+                key={link._id || link.key}
+                className="pageLinksInputContainer mt-8 flex flex-col items-center gap-2 md:flex-row"
               >
-                <FontAwesomeIcon
-                  fixedWidth
-                  icon={faGripLines}
-                  className="grab mr-2 h-6 w-6 rotate-90 cursor-move text-gray-500"
-                />
-
-                <div className="text-center">
-                  <div className="relative inline-flex h-16 w-16 items-center justify-center overflow-hidden rounded-sm bg-gray-300">
-                    {!link.icon ? (
-                      <FontAwesomeIcon fixedWidth icon={faLink} size="xl" />
-                    ) : (
-                      <Image
-                        fill
-                        src={link.icon}
-                        alt="link"
-                        className="h-full w-full object-cover object-center"
-                        sizes="33vw"
-                      />
-                    )}
-                  </div>
-                  <input
-                    name="linkIcon"
-                    onChange={(e) => fileUploadHandler(e, link.key!)}
-                    type="file"
-                    hidden
-                    id={link.key}
-                    accept="image/*"
+                <div className="flex w-full flex-shrink-0 items-center md:w-auto">
+                  <FontAwesomeIcon
+                    fixedWidth
+                    icon={faGripLines}
+                    className="grab mr-2 h-6 w-6 cursor-move justify-start text-gray-500"
                   />
-                  <label
-                    htmlFor={link.key}
-                    className="mt-1.5 flex cursor-pointer items-center gap-2 rounded-md border p-1.5 text-gray-700"
+
+                  <div className="flex-1 justify-center text-center md:flex-auto">
+                    <div className="relative inline-flex h-16 w-16 items-center justify-center overflow-hidden rounded-sm bg-gray-300">
+                      {!link.icon ? (
+                        <FontAwesomeIcon fixedWidth icon={faLink} size="xl" />
+                      ) : (
+                        <Image
+                          fill
+                          src={link.icon}
+                          alt="link"
+                          className="h-full w-full object-cover object-center"
+                          sizes="33vw"
+                        />
+                      )}
+                    </div>
+                    <input
+                      name="linkIcon"
+                      onChange={(e) => fileUploadHandler(e, link.key!)}
+                      type="file"
+                      hidden
+                      id={link.key}
+                      accept="image/*"
+                    />
+
+                    <label
+                      htmlFor={link.key}
+                      className="mx-auto mt-1.5 flex max-w-xs cursor-pointer items-center gap-2 rounded-md border p-1.5 text-gray-700"
+                    >
+                      <FontAwesomeIcon
+                        fixedWidth
+                        icon={faCloudArrowUp}
+                        className="h-6 w-6"
+                      />
+                      <span>Change Icon</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex w-full">
+                  <div className="pageLinksInputContainer flex-grow">
+                    <label htmlFor={`title-${link.key}`}>Title</label>
+                    <input
+                      id={`title-${link.key}`}
+                      value={link.title}
+                      name="title"
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        handleInputChange(e, link.key!)
+                      }
+                      type="text"
+                      placeholder="Title"
+                    />
+
+                    <label htmlFor={`description-${link.key}`}>
+                      Description
+                    </label>
+                    <textarea
+                      id={`description-${link.key}`}
+                      value={link.description}
+                      name="description"
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                        handleInputChange(e, link.key!)
+                      }
+                      placeholder="Description (Optional)"
+                    />
+
+                    <label htmlFor={`link-${link.key}`}>Link</label>
+                    <input
+                      id={`link-${link.key}`}
+                      value={link.link}
+                      name="link"
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        handleInputChange(e, link.key!)
+                      }
+                      type="text"
+                      placeholder="Link"
+                    />
+                  </div>
+
+                  <button
+                    type="button"
+                    className="mx-2 flex items-center justify-center"
                   >
                     <FontAwesomeIcon
+                      className="h-7 w-7"
                       fixedWidth
-                      icon={faCloudArrowUp}
-                      className="h-6 w-6"
+                      icon={faClose}
+                      onClick={() =>
+                        setLinks((prev) =>
+                          prev.filter((linkItem) => linkItem.key !== link.key),
+                        )
+                      }
                     />
-                    <span> Change Icon</span>
-                  </label>
+                  </button>
                 </div>
-
-                <div className="pageLinksInputContainer flex-grow">
-                  <label htmlFor={`title-${link.key}`}>Title</label>
-                  <input
-                    id={`title-${link.key}`}
-                    value={link.title}
-                    name="title"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      handleInputChange(e, link.key!)
-                    }
-                    type="text"
-                    placeholder="Title"
-                  />
-
-                  <label htmlFor={`description-${link.key}`}>Description</label>
-                  <textarea
-                    id={`description-${link.key}`}
-                    value={link.description}
-                    name="description"
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                      handleInputChange(e, link.key!)
-                    }
-                    placeholder="Description (Optional)"
-                  />
-
-                  <label htmlFor={`link-${link.key}`}>Link</label>
-                  <input
-                    id={`link-${link.key}`}
-                    value={link.link}
-                    name="link"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      handleInputChange(e, link.key!)
-                    }
-                    type="text"
-                    placeholder="Link"
-                  />
-                </div>
-
-                <button
-                  type="button"
-                  className="mx-2 flex items-center justify-center"
-                >
-                  <FontAwesomeIcon
-                    className="h-7 w-7"
-                    fixedWidth
-                    icon={faClose}
-                    onClick={() =>
-                      setLinks((prev) =>
-                        prev.filter((linkItem) => linkItem.key !== link.key),
-                      )
-                    }
-                  />
-                </button>
               </div>
             ))}
           </ReactSortable>
@@ -256,9 +262,9 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
           <span>Save Links</span>
         </SubmitForm>
 
-        {formstate.error && (
+        {formState.error && (
           <p aria-live="polite" className="text-sm text-red-600">
-            {formstate.errorMessage}
+            {formState.errorMessage}
           </p>
         )}
       </form>

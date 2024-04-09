@@ -39,11 +39,12 @@ export default async function AppLayout({
           <label
             htmlFor="menu-toggler"
             className="backdrop fixed inset-0 z-10 hidden bg-black/80 md:static"
+            aria-label="Close Menu"
           />
 
           <label
             htmlFor="menu-toggler"
-            className="ml-8 mt-4 inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-md bg-white p-2 shadow md:hidden"
+            className="ml-4 mt-4 inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-md bg-white p-2 shadow md:hidden"
           >
             <FontAwesomeIcon icon={faBars} className="h-4 w-4" />
             <span>Menu</span>
