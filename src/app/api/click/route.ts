@@ -1,10 +1,10 @@
+import connectToDatabase from "@/app/libs/mongoosedb";
 import PageAnalytic from "@/models/PageAnalytic.model";
-import { connect } from "mongoose";
 
 const click = async (req: Request, res: Response) => {
   try {
     // req.url.searchParams.get('url')
-    await connect(process.env.MONGODB_URI!);
+    await connectToDatabase();
     const { url, type, uri } = await req.json();
 
     await PageAnalytic.create({

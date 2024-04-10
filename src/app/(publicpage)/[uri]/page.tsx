@@ -1,14 +1,13 @@
-import Page from "@/models/Page.model.";
+import Page from "@/models/Page.model";
 import Image from "next/image";
 import { allButtons } from "@/data/linkButtons";
-import { connect } from "mongoose";
-import { LinkButton } from "@/../global";
-import { PageObject } from "@/../global";
+import { LinkButton, PageObject } from "@/../global";
 import User from "@/models/User.model";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink, faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import Link from "@/components/Link";
 import PageAnalytic from "@/models/PageAnalytic.model";
+import connectToDatabase from "@/app/libs/mongoosedb";
 
 const linkPrefixes: any = {
   email: "mailto:",
@@ -17,13 +16,13 @@ const linkPrefixes: any = {
 
 export default async function PublicPage({
   params,
-}: {
+}: Readonly<{
   params: { uri: string };
-}) {
-  await connect(process.env.MONGODB_URI!);
-  const page: PageObject | null = await Page.findOne({ uri: params.uri! });
+}>) {
+  await connectToDatabase();
+  const page: PageObject | null = await Page.findOne({ uri: params.uri });
   const user = await User.findOne({ email: page?.owner });
-  await PageAnalytic.create({ uri: params.uri!, type: "view" });
+  await PageAnalytic.create({ uri: params.uri, type: "view" });
 
   return (
     <div className="min-h-screen bg-blue-950 text-white">
@@ -76,7 +75,7 @@ export default async function PublicPage({
               beaconData={{
                 url: base64EncodedData,
                 type: "click",
-                uri: params.uri!,
+                uri: params.uri,
               }}
               classNames="rounded-full bg-white p-2 text-blue-600"
             >
@@ -91,7 +90,7 @@ export default async function PublicPage({
       </div>
 
       <div className="mx-auto grid max-w-2xl grid-cols-1 place-items-center gap-2 p-4 sm:grid-cols-2 sm:gap-6">
-        {page?.links.map((link) => {
+        {page?.links.map((link: PageLink) => {
           const base64EncodedData = btoa(encodeURI(link.link));
 
           return (
@@ -103,7 +102,7 @@ export default async function PublicPage({
               beaconData={{
                 url: base64EncodedData,
                 type: "click",
-                uri: params.uri!,
+                uri: params.uri,
               }}
               classNames="flex w-full max-w-xs items-center rounded-md bg-indigo-900 p-2"
             >

@@ -1,10 +1,12 @@
 "use server";
 
 import { authOption } from "@/app/api/auth/[...nextauth]/route";
-import Page from "@/models/Page.model.";
-import { connect } from "mongoose";
+import Page from "@/models/Page.model";
 import { getServerSession } from "next-auth";
+
+// @ts-ignore
 import { PageLink } from "../../global";
+import connectToDatabase from "@/app/libs/mongoosedb";
 
 export async function savePage(prevState: any, formData: FormData) {
   try {
@@ -35,7 +37,7 @@ export async function savePage(prevState: any, formData: FormData) {
       }
     }
 
-    await connect(process.env.MONGODB_URI!);
+    await connectToDatabase();
     await Page.updateOne({ owner: session?.user?.email }, dataToUpdate);
 
     return {
@@ -60,13 +62,15 @@ export async function savePageButtons(prevState: any, formData: FormData) {
         errorMessage: "Session Expired or not available.",
       };
 
-    await connect(process.env.MONGODB_URI!);
+    await connectToDatabase();
     const filteredButtons: any = {};
     formData.forEach((value, key) => {
       if (!key.startsWith("$")) {
-        const trimmedValue = value?.toString()?.trim();
-        if (trimmedValue) {
-          filteredButtons[key] = trimmedValue.toLocaleLowerCase();
+        if (typeof value === "string") {
+          const trimmedValue = value.trim();
+          if (trimmedValue) {
+            filteredButtons[key] = trimmedValue.toLocaleLowerCase();
+          }
         }
       }
     });
@@ -98,7 +102,7 @@ export async function savePageLinks(links: PageLink[]) {
         errorMessage: "Session Expired or not available.",
       };
 
-    await connect(process.env.MONGODB_URI!);
+    await connectToDatabase();
     const filteredLinks = links
       .map((link) => ({
         ...link,

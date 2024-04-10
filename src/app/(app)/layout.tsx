@@ -5,12 +5,14 @@ import "../globals.css";
 import { getServerSession } from "next-auth";
 import { authOption } from "../api/auth/[...nextauth]/route";
 import SidebarNav from "@/components/layouts/SidebarNav";
-import { connect } from "mongoose";
-import Page from "@/models/Page.model.";
+import Page from "@/models/Page.model";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faLink } from "@fortawesome/free-solid-svg-icons";
+
+// @ts-ignore
 import { PageObject } from "@/../global";
 import Link from "next/link";
+import connectToDatabase from "../libs/mongoosedb";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +28,7 @@ export default async function AppLayout({
 }>) {
   // @ts-ignore
   const session = await getServerSession(authOption);
-  await connect(process.env.MONGODB_URI!);
+  await connectToDatabase();
   const page: PageObject | null = await Page.findOne({
     owner: session?.user?.email,
   });

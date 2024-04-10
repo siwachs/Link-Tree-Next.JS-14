@@ -29,7 +29,7 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
 
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState<PageLink[]>(
-    page.links.map((link) => {
+    page.links.map((link: PageLink) => {
       return { ...link, key: link._id };
     }) || [],
   );
@@ -115,6 +115,10 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
         errorMessage: data.errorMessage,
       });
     } catch (error: any) {}
+  };
+
+  const removeLink = (link: any) => {
+    setLinks((prev) => prev.filter((linkItem) => linkItem.key !== link.key));
   };
 
   return (
@@ -244,11 +248,7 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
                       className="h-7 w-7"
                       fixedWidth
                       icon={faClose}
-                      onClick={() =>
-                        setLinks((prev) =>
-                          prev.filter((linkItem) => linkItem.key !== link.key),
-                        )
-                      }
+                      onClick={() => removeLink(link)}
                     />
                   </button>
                 </div>

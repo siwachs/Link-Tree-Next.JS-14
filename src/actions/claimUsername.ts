@@ -1,8 +1,8 @@
 "use server";
 
 import { authOption } from "@/app/api/auth/[...nextauth]/route";
-import Page from "@/models/Page.model.";
-import { connect } from "mongoose";
+import connectToDatabase from "@/app/libs/mongoosedb";
+import Page from "@/models/Page.model";
 import { getServerSession } from "next-auth";
 
 export default async function claimUsername(
@@ -19,7 +19,7 @@ export default async function claimUsername(
         errorMessage: "Username is required.",
       };
 
-    await connect(process.env.MONGODB_URI!);
+    await connectToDatabase();
 
     // @ts-ignore
     const session = await getServerSession(authOption);

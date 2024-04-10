@@ -1,15 +1,17 @@
 import { PipelineStage } from "mongoose";
+
+// @ts-ignore
 import {
   AnalyticAggregationObject,
   TransformedAggregationObject,
+  PageObject,
 } from "@/../global";
 import { authOption } from "@/app/api/auth/[...nextauth]/route";
 import SectionBox from "@/components/layouts/SectionBox";
 import PageAnalytic from "@/models/PageAnalytic.model";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { PageObject } from "@/../global";
-import Page from "@/models/Page.model.";
+import Page from "@/models/Page.model";
 import Chart from "@/components/charts/Chart";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -220,7 +222,7 @@ export default async function AnalyticsPage() {
       <SectionBox classNames="-mt-6">
         <h2 className="mb-6 text-center text-xl font-semibold">Clicks</h2>
 
-        {page?.links.map((link) => (
+        {page?.links.map((link: PageLink) => (
           <div
             key={link._id}
             className="items-center gap-4 border-t border-gray-200 px-2 py-4 text-center md:flex md:text-left"
