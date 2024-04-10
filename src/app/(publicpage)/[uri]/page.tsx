@@ -8,6 +8,7 @@ import { faLink, faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import Link from "@/components/Link";
 import PageAnalytic from "@/models/PageAnalytic.model";
 import connectToDatabase from "@/app/libs/mongoosedb";
+import { notFound } from "next/navigation";
 
 const linkPrefixes: any = {
   email: "mailto:",
@@ -22,6 +23,7 @@ export default async function PublicPage({
   await connectToDatabase();
   const page: PageObject | null = await Page.findOne({ uri: params.uri });
   const user = await User.findOne({ email: page?.owner });
+  if (!user) return notFound();
   await PageAnalytic.create({ uri: params.uri, type: "view" });
 
   return (

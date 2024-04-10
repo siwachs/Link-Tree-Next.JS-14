@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { authOption } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import ClaimUsernameForm from "@/components/forms/ClaimUsernameForm";
@@ -11,14 +10,13 @@ import connectToDatabase from "@/app/libs/mongoosedb";
 export default async function AccountPage(req: any) {
   // @ts-ignore
   const session = await getServerSession(authOption);
-  if (!session) redirect("/");
 
   const desiredUsername = req.searchParams?.desiredUsername?.trim();
   await connectToDatabase();
   const page = await Page.findOne({ owner: session?.user?.email });
   const plainPage = JSON.parse(JSON.stringify(page));
 
-  return page ? (
+  return page && session ? (
     <>
       <PageSettingsForm page={plainPage} session={session} />
       <PageButtonsForm page={plainPage} />

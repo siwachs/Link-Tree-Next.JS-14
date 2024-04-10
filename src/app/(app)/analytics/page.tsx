@@ -10,7 +10,6 @@ import { authOption } from "@/app/api/auth/[...nextauth]/route";
 import SectionBox from "@/components/layouts/SectionBox";
 import PageAnalytic from "@/models/PageAnalytic.model";
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import Page from "@/models/Page.model";
 import Chart from "@/components/charts/Chart";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,9 +20,8 @@ import Link from "next/link";
 export default async function AnalyticsPage() {
   // @ts-ignore
   const session = await getServerSession(authOption);
-  if (!session) redirect("/");
   const page: PageObject | null = await Page.findOne({
-    owner: session.user?.email,
+    owner: session?.user?.email,
   });
 
   const aggregatePipeline = (

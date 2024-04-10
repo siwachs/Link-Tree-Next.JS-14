@@ -14,7 +14,7 @@ const CreateAccountForm: React.FC<{ user: any }> = ({ user }) => {
     if (!username) return;
 
     if (user) {
-      router.push(`/account?desiredUsername=${username}`);
+      router.push("/account");
     } else {
       signIn("google", { callbackUrl: `/account?desiredUsername=${username}` });
     }
