@@ -1,12 +1,12 @@
 "use server";
 
-import { authOption } from "@/app/api/auth/[...nextauth]/route";
 import Page from "@/models/Page.model";
 import { getServerSession } from "next-auth";
 
 // @ts-ignore
 import { PageLink } from "../../global";
 import connectToDatabase from "@/app/libs/mongoosedb";
+import { authOption } from "@/app/libs/authOptions";
 
 export async function savePage(prevState: any, formData: FormData) {
   try {

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useFormState } from "react-dom";
+
+// @ts-ignore
 import { PageObject, LinkButton } from "@/../global";
 import SectionBox from "../layouts/SectionBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

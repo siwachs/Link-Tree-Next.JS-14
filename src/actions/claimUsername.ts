@@ -1,6 +1,6 @@
 "use server";
 
-import { authOption } from "@/app/api/auth/[...nextauth]/route";
+import { authOption } from "@/app/libs/authOptions";
 import connectToDatabase from "@/app/libs/mongoosedb";
 import Page from "@/models/Page.model";
 import { getServerSession } from "next-auth";

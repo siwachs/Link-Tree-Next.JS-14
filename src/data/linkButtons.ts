@@ -11,6 +11,8 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope, faMobile } from "@fortawesome/free-solid-svg-icons";
+
+// @ts-ignore
 import { LinkButton } from "@/../global";
 
 export const allButtons: LinkButton[] = [

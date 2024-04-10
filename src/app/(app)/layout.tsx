@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Inter } from "next/font/google";
 import "../globals.css";
 import { getServerSession } from "next-auth";
-import { authOption } from "../api/auth/[...nextauth]/route";
+import { authOption } from "../libs/authOptions";
 import SidebarNav from "@/components/layouts/SidebarNav";
 import Page from "@/models/Page.model";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

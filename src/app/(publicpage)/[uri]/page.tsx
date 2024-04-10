@@ -1,6 +1,8 @@
 import Page from "@/models/Page.model";
 import Image from "next/image";
 import { allButtons } from "@/data/linkButtons";
+
+// @ts-ignore
 import { LinkButton, PageObject } from "@/../global";
 import User from "@/models/User.model";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

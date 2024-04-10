@@ -1,5 +1,6 @@
 "use client";
 
+// @ts-ignore
 import { PageLink, PageObject } from "@/../global";
 import SectionBox from "../layouts/SectionBox";
 import { ReactSortable } from "react-sortablejs";

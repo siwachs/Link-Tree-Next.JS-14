@@ -1,6 +1,8 @@
 "use client";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+// @ts-ignore
 import { ToggleOption } from "@/../global";
 import PlainLoader from "../loaders/PlainLoader";
 import { faCloudArrowUp, faPalette } from "@fortawesome/free-solid-svg-icons";
@@ -73,7 +75,7 @@ const BGTypeToggler: React.FC<{
             option;
 
           return (
-            <label key={id}>
+            <label aria-label="color-image-picker" key={id}>
               <input
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   if (loading) return;
@@ -99,7 +101,10 @@ const BGTypeToggler: React.FC<{
 
       {bgType === "color" ? (
         <div className="flex justify-center">
-          <label className="mt-2 flex gap-2 bg-white px-4 py-2 shadow">
+          <label
+            aria-label="color-picker"
+            className="mt-2 flex gap-2 bg-white px-4 py-2 shadow"
+          >
             <input
               hidden
               type="color"
@@ -121,7 +126,10 @@ const BGTypeToggler: React.FC<{
         </div>
       ) : (
         <div className="flex justify-center">
-          <label className="mt-2 flex gap-2 bg-white px-4 py-2 shadow">
+          <label
+            aria-label="image-picker"
+            className="mt-2 flex gap-2 bg-white px-4 py-2 shadow"
+          >
             <input
               name="bgImage"
               hidden

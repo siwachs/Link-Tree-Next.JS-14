@@ -2,8 +2,8 @@ import Link from "next/link";
 import SignOut from "./buttons/SignOut";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
-import { authOption } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
+import { authOption } from "@/app/libs/authOptions";
 
 const Header: React.FC = async () => {
   // @ts-ignore

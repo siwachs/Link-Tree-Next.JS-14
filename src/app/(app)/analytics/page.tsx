@@ -1,12 +1,14 @@
 import { PipelineStage } from "mongoose";
 
-// @ts-ignore
 import {
+  // @ts-ignore
   AnalyticAggregationObject,
+  // @ts-ignore
   TransformedAggregationObject,
+  // @ts-ignore
   PageObject,
+  // @ts-ignore
 } from "@/../global";
-import { authOption } from "@/app/api/auth/[...nextauth]/route";
 import SectionBox from "@/components/layouts/SectionBox";
 import PageAnalytic from "@/models/PageAnalytic.model";
 import { getServerSession } from "next-auth";
@@ -16,6 +18,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import { authOption } from "@/app/libs/authOptions";
 
 export default async function AnalyticsPage() {
   // @ts-ignore

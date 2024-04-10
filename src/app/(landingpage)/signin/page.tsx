@@ -1,7 +1,7 @@
 import LoginWithGoogle from "@/components/buttons/LoginWithGoogle";
 import { redirect } from "next/navigation";
-import { authOption } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
+import { authOption } from "@/app/libs/authOptions";
 
 export default async function SigninPage() {
   // @ts-ignore

@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
-import { authOption } from "../api/auth/[...nextauth]/route";
 import CreateAccountForm from "@/components/forms/CreateAccountForm";
+import { authOption } from "../libs/authOptions";
 
 export default async function Home() {
   // @ts-ignore

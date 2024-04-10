@@ -11,6 +11,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+
+// @ts-ignore
 import { TransformedAggregationObject } from "@/../global";
 
 const Chart: React.FC<{

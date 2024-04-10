@@ -1,4 +1,3 @@
-import { authOption } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import ClaimUsernameForm from "@/components/forms/ClaimUsernameForm";
 import Page from "@/models/Page.model";
@@ -6,6 +5,7 @@ import PageSettingsForm from "@/components/forms/PageSettingsForm";
 import PageButtonsForm from "@/components/forms/PageButtonsForm";
 import PageLinksForm from "@/components/forms/PageLinksForm";
 import connectToDatabase from "@/app/libs/mongoosedb";
+import { authOption } from "@/app/libs/authOptions";
 
 export default async function AccountPage(req: any) {
   // @ts-ignore

@@ -9,6 +9,8 @@ import {
   faSave,
 } from "@fortawesome/free-solid-svg-icons";
 import BGTypeToggler from "../formElements/BGTypeToggler";
+
+// @ts-ignore
 import { ToggleOption, PageObject } from "@/../global";
 import SubmitForm from "../buttons/SubmitForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -1,10 +1,10 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { authOption } from "@/app/api/auth/[...nextauth]/route";
 import Page from "@/models/Page.model";
 import { getServerSession } from "next-auth";
 import uniqid from "uniqid";
 import User from "@/models/User.model";
 import connectToDatabase from "@/app/libs/mongoosedb";
+import { authOption } from "@/app/libs/authOptions";
 
 const awsBucketUpload = async (file: File) => {
   try {
