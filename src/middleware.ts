@@ -2,7 +2,7 @@ import { withAuth } from "next-auth/middleware";
 
 export default withAuth(function middleware(req) {}, {
   callbacks: {
-    authorized: ({ token }) => !!token,
+    authorized: ({ token }) => true,
   },
   pages: { signIn: "/signin" },
 });
