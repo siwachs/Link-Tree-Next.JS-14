@@ -89,6 +89,16 @@ async function uploadFile(req: Request, res: Response) {
       );
     }
 
+    if (process.env.NODE_ENV === "production") {
+      return Response.json(
+        {
+          error: true,
+          message: "You can not upload S3 Images in production.",
+        },
+        { status: 400 },
+      );
+    }
+
     let url;
     await connectToDatabase();
 
