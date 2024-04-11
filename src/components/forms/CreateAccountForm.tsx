@@ -23,20 +23,20 @@ const CreateAccountForm: React.FC<{ user: any }> = ({ user }) => {
   return (
     <form
       onSubmit={createAccount}
-      className="inline-flex flex-col items-center shadow-lg sm:flex-row"
+      className="inline-flex flex-col items-center shadow-lg md:flex-row"
     >
       <div className="flex items-center">
-        <span className="bg-white py-2 pl-4 sm:py-4">linktree.to/</span>
+        <span className="bg-white py-2 pl-4 md:py-4">linktree.to/</span>
         <input
           ref={usernameRef}
           placeholder="username"
-          className="px-2 py-2 outline-none sm:py-4"
+          className="px-2 py-2 outline-none md:py-4"
           type="text"
         />
       </div>
 
       <button
-        className="mt-2 w-full bg-blue-500 px-6 py-2 text-white sm:mt-0 sm:py-4"
+        className="mt-2 w-full bg-blue-500 px-6 py-2 text-white md:mt-0 md:py-4"
         type="submit"
       >
         Join for Free
