@@ -28,10 +28,10 @@ export async function middleware(request: NextRequest) {
   });
 
   if (response.ok) {
-    // const session = await response.json();
-    // if (new Date(session.expires) < new Date()) {
-    //   return NextResponse.redirect(new URL("/signin", request.url));
-    // }
+    const session = await response.json();
+    if (new Date(session.expires) < new Date()) {
+      return NextResponse.redirect(new URL("/signin", request.url));
+    }
     return NextResponse.next();
   }
 
