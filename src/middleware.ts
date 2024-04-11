@@ -2,6 +2,9 @@ import { cookies } from "next/headers";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.next();
+  }
   const _cookies = cookies();
   const allCookies = _cookies
     .getAll()
