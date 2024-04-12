@@ -4,6 +4,8 @@ import GoogleAuthProvider from "next-auth/providers/google";
 import { NextAuthOptions } from "next-auth";
 
 export const authOption: NextAuthOptions = {
+  // @ts-ignore
+  adapter: MongoDBAdapter(clientPromise),
   providers: [
     GoogleAuthProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -16,6 +18,6 @@ export const authOption: NextAuthOptions = {
     updateAge: 24 * 60 * 60, // 24 hours
   },
   pages: { signIn: "/signin" },
-  jwt: { secret: process.env.NEXTAUTH_SECRET as string },
   secret: process.env.NEXTAUTH_SECRET as string,
+  jwt: { secret: process.env.NEXTAUTH_SECRET as string },
 };
