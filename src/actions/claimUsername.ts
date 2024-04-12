@@ -4,6 +4,7 @@ import { authOption } from "@/app/libs/authOptions";
 import connectToDatabase from "@/app/libs/mongoosedb";
 import Page from "@/models/Page.model";
 import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
 
 export default async function claimUsername(
   prevState: any,
@@ -13,8 +14,6 @@ export default async function claimUsername(
     const username = formData.get("username")?.toString()?.trim();
     if (!username)
       return {
-        redirect: false,
-        redirectTo: null,
         error: true,
         errorMessage: "Username is required.",
       };
@@ -29,25 +28,21 @@ export default async function claimUsername(
       displayName: session?.user?.name,
     });
 
+    revalidatePath("/account");
+
     return {
-      redirect: true,
-      redirectTo: `/account?created=${username}`,
       error: false,
       errorMessage: "",
     };
   } catch (error: any) {
     if (error.code === 11000) {
       return {
-        redirect: false,
-        redirectTo: null,
         error: true,
         errorMessage: "Username already taken.",
       };
     }
 
     return {
-      redirect: false,
-      redirectTo: null,
       error: true,
       errorMessage: error.message,
     };

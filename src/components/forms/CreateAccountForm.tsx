@@ -30,7 +30,7 @@ const CreateAccountForm: React.FC<{ user: any }> = ({ user }) => {
         <input
           ref={usernameRef}
           placeholder="username"
-          className="px-2 py-2 outline-none md:py-4"
+          className="w-full px-2 py-2 outline-none md:w-auto md:py-4"
           type="text"
         />
       </div>

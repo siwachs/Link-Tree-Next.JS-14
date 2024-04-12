@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   CartesianGrid,
   Legend,
@@ -20,10 +19,6 @@ const Chart: React.FC<{
   combined?: boolean;
   dataKey?: string;
 }> = ({ data, combined, dataKey }) => {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
-
   return (
     <ResponsiveContainer width="100%" height={450}>
       <LineChart width={1240} height={450} data={data}>

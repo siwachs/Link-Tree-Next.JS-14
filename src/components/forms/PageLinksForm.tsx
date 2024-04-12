@@ -67,18 +67,20 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
     e: React.ChangeEvent<HTMLInputElement>,
     key: string,
   ) => {
-    const selectedImage = e.target.files?.[0] || null;
-    if (
-      selectedImage &&
-      selectedImage.size <= 1024 * 1024 &&
-      selectedImage.type.startsWith("image/")
-    ) {
-      const formData = new FormData();
-      formData.set("name", e.target.name);
-      formData.set("linkIcon", selectedImage);
+    try {
+      const selectedImage = e.target.files?.[0] || null;
+      if (
+        selectedImage &&
+        selectedImage.size <= 1024 * 1024 &&
+        selectedImage.type.startsWith("image/")
+      ) {
+        const formData = new FormData();
+        formData.set("name", e.target.name);
+        formData.set("linkIcon", selectedImage);
+        if (loading) return;
 
-      setLoading(true);
-      try {
+        setLoading(true);
+
         const response = await fetch("/api/upload", {
           method: "POST",
           body: formData,
@@ -94,16 +96,16 @@ const PageLinksForm: React.FC<{ page: PageObject }> = ({ page }) => {
             ),
           );
         }
-      } catch (error: any) {
-        alert(error.message);
-      } finally {
-        setLoading(false);
+      } else {
+        // 1MB = 1024 KB and 1KB = 1024 Bytes so 1024 * 1024 Bytes
+        alert(
+          "Invalid File: File must be a image of size less than equal to 1MB.",
+        );
       }
-    } else {
-      // 1MB = 1024 KB and 1KB = 1024 Bytes so 1024 * 1024 Bytes
-      alert(
-        "Invalid File: File must be a image of size less than equal to 1MB.",
-      );
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 

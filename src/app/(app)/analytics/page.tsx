@@ -12,13 +12,118 @@ import {
 import SectionBox from "@/components/layouts/SectionBox";
 import PageAnalytic from "@/models/PageAnalytic.model";
 import { getServerSession } from "next-auth";
+import dynamic from "next/dynamic";
 import Page from "@/models/Page.model";
-import Chart from "@/components/charts/Chart";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { authOption } from "@/app/libs/authOptions";
+
+// Dynamic Imports ...
+const Chart = dynamic(() => import("@/components/charts/Chart"), {
+  ssr: false,
+  loading: () => <div className="min-h-96" />,
+});
+
+const aggregatePipeline = (
+  uri: string | undefined,
+  type: string,
+): PipelineStage[] => [
+  // Stage 1
+  {
+    $match: {
+      type: type,
+      uri: uri,
+    },
+  },
+
+  // Stage 2
+  {
+    $sort: {
+      createdAt: 1, // Sorting in ascending order by createdAt date, use -1 for descending order
+    },
+  },
+
+  // Stage 3
+  {
+    $group: {
+      _id: {
+        $dateToString: {
+          date: "$createdAt",
+          format: "%d-%m-%Y",
+        },
+      },
+      count: { $sum: 1 },
+    },
+  },
+];
+
+const mergeAnalytics = (
+  transformedAnalyticsViews: TransformedAggregationObject,
+  transformedAnalyticsClicks: TransformedAggregationObject,
+): TransformedAggregationObject[] => {
+  const mergedAnalytics: TransformedAggregationObject[] = [];
+
+  let viewsIndex = 0;
+  let clicksIndex = 0;
+
+  while (
+    viewsIndex < transformedAnalyticsViews.length ||
+    clicksIndex < transformedAnalyticsClicks.length
+  ) {
+    const viewsDate =
+      viewsIndex < transformedAnalyticsViews.length
+        ? transformedAnalyticsViews[viewsIndex].date
+        : null;
+    const clicksDate =
+      clicksIndex < transformedAnalyticsClicks.length
+        ? transformedAnalyticsClicks[clicksIndex].date
+        : null;
+
+    if (viewsDate && clicksDate) {
+      if (viewsDate === clicksDate) {
+        mergedAnalytics.push({
+          date: viewsDate,
+          views: transformedAnalyticsViews[viewsIndex].views,
+          clicks: transformedAnalyticsClicks[clicksIndex].clicks,
+        });
+        viewsIndex++;
+        clicksIndex++;
+      } else if (viewsDate < clicksDate) {
+        mergedAnalytics.push({
+          date: viewsDate,
+          views: transformedAnalyticsViews[viewsIndex].views,
+          clicks: 0,
+        });
+        viewsIndex++;
+      } else {
+        mergedAnalytics.push({
+          date: clicksDate,
+          views: 0,
+          clicks: transformedAnalyticsClicks[clicksIndex].clicks,
+        });
+        clicksIndex++;
+      }
+    } else if (viewsDate) {
+      mergedAnalytics.push({
+        date: viewsDate,
+        views: transformedAnalyticsViews[viewsIndex].views,
+        clicks: 0,
+      });
+      viewsIndex++;
+    } else if (clicksDate) {
+      mergedAnalytics.push({
+        date: clicksDate,
+        views: 0,
+        clicks: transformedAnalyticsClicks[clicksIndex].clicks,
+      });
+      clicksIndex++;
+    }
+  }
+
+  return mergedAnalytics;
+};
 
 export default async function AnalyticsPage() {
   // @ts-ignore
@@ -26,39 +131,6 @@ export default async function AnalyticsPage() {
   const page: PageObject | null = await Page.findOne({
     owner: session?.user?.email,
   });
-
-  const aggregatePipeline = (
-    uri: string | undefined,
-    type: string,
-  ): PipelineStage[] => [
-    // Stage 1
-    {
-      $match: {
-        type: type,
-        uri: uri,
-      },
-    },
-
-    // Stage 2
-    {
-      $sort: {
-        createdAt: 1, // Sorting in ascending order by createdAt date, use -1 for descending order
-      },
-    },
-
-    // Stage 3
-    {
-      $group: {
-        _id: {
-          $dateToString: {
-            date: "$createdAt",
-            format: "%d-%m-%Y",
-          },
-        },
-        count: { $sum: 1 },
-      },
-    },
-  ];
 
   const viewCountsresult: AnalyticAggregationObject[] =
     await PageAnalytic.aggregate(aggregatePipeline(page?.uri, "view"));
@@ -136,64 +208,10 @@ export default async function AnalyticsPage() {
   const transformedAnalyticsClicks: TransformedAggregationObject[] =
     transformPipelineResult(clickCountsresult, "click");
 
-  const mergedAnalytics: TransformedAggregationObject[] = [];
-
-  let viewsIndex = 0;
-  let clicksIndex = 0;
-
-  while (
-    viewsIndex < transformedAnalyticsViews.length ||
-    clicksIndex < transformedAnalyticsClicks.length
-  ) {
-    const viewsDate =
-      viewsIndex < transformedAnalyticsViews.length
-        ? transformedAnalyticsViews[viewsIndex].date
-        : null;
-    const clicksDate =
-      clicksIndex < transformedAnalyticsClicks.length
-        ? transformedAnalyticsClicks[clicksIndex].date
-        : null;
-
-    if (viewsDate && clicksDate) {
-      if (viewsDate === clicksDate) {
-        mergedAnalytics.push({
-          date: viewsDate,
-          views: transformedAnalyticsViews[viewsIndex].views,
-          clicks: transformedAnalyticsClicks[clicksIndex].clicks,
-        });
-        viewsIndex++;
-        clicksIndex++;
-      } else if (viewsDate < clicksDate) {
-        mergedAnalytics.push({
-          date: viewsDate,
-          views: transformedAnalyticsViews[viewsIndex].views,
-          clicks: 0,
-        });
-        viewsIndex++;
-      } else {
-        mergedAnalytics.push({
-          date: clicksDate,
-          views: 0,
-          clicks: transformedAnalyticsClicks[clicksIndex].clicks,
-        });
-        clicksIndex++;
-      }
-    } else if (viewsDate) {
-      mergedAnalytics.push({
-        date: viewsDate,
-        views: transformedAnalyticsViews[viewsIndex].views,
-        clicks: 0,
-      });
-      viewsIndex++;
-    } else if (clicksDate) {
-      mergedAnalytics.push({
-        date: clicksDate,
-        views: 0,
-        clicks: transformedAnalyticsClicks[clicksIndex].clicks,
-      });
-      clicksIndex++;
-    }
-  }
+  const mergedAnalytics: TransformedAggregationObject[] = mergeAnalytics(
+    transformedAnalyticsViews,
+    transformedAnalyticsClicks,
+  );
 
   const sortByDate = (a: any, b: any) => {
     const dateA: any = new Date(a.date.split("-").reverse().join("-"));
@@ -208,14 +226,14 @@ export default async function AnalyticsPage() {
 
   return (
     <>
-      <SectionBox classNames="min-h-[512px]">
+      <SectionBox>
         <h2 className="mb-6 text-center text-xl font-semibold">
           Page Analytics
         </h2>
         <Chart data={mergedAnalytics} combined />
       </SectionBox>
 
-      <SectionBox classNames="-mt-6 min-h-[512px]">
+      <SectionBox classNames="-mt-6">
         <h2 className="my-6 text-center text-xl font-semibold">Views</h2>
         <Chart data={mergedAnalytics} dataKey="views" />
       </SectionBox>

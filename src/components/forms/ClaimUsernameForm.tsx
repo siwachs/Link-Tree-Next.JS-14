@@ -2,7 +2,6 @@
 
 import claimUsername from "@/actions/claimUsername";
 import { useFormState } from "react-dom";
-import { redirect } from "next/navigation";
 import SubmitForm from "../buttons/SubmitForm";
 import RightIcons from "../icons/RightIcons";
 
@@ -18,11 +17,10 @@ const ClaimUsernameForm: React.FC<{ desiredUsername: string }> = ({
 }) => {
   // @ts-ignore
   const [state, formAction] = useFormState(claimUsername, initialState);
-  if (state.redirect) redirect(state.redirectTo!);
 
   return (
     <form action={formAction}>
-      <h1 className="mb-6 select-none text-center text-4xl font-bold">
+      <h1 className="mb-6 select-none pt-32 text-center text-4xl font-bold">
         Grab your username
       </h1>
 
